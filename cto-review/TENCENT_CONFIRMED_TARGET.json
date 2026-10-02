@@ -1,0 +1,15 @@
+{
+  "scope": "Public CTO review summary; private infrastructure identifiers omitted",
+  "deployment": "ISOLATED_CI_NOT_PRODUCTION",
+  "sourceCandidate": "78a17d3ec54f3dd2e8b45480aa5ad3a9a9e4f955e9521e54a345ac1979d2e598",
+  "node": "22.23.3",
+  "compiledFilesVerified": 660,
+  "migrationsCompleted": 26,
+  "cloudCiTestsPassed": 706,
+  "workerFaultRecovery": "VERIFIED",
+  "wholeHostReboot": "VERIFIED",
+  "apiAndDatabaseExposure": "LOOPBACK_ONLY",
+  "realFunds": "NOT_RUN",
+  "miniappRelease": "NOT_DONE",
+  "independentBrowserBusinessRead": "NOT_VERIFIED"
+}

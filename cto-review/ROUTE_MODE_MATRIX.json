@@ -1,0 +1,77 @@
+{
+  "verifiedAt": "2026-10-02",
+  "defaultPriorEntry": {
+    "page": "App",
+    "login": "POST /api/ops/login",
+    "api": "/api/ops/*",
+    "model": [
+      "Order",
+      "Payment",
+      "Refund"
+    ],
+    "acceptanceScope": "LEGACY_READ_ONLY_NOT_V11"
+  },
+  "entries": [
+    {
+      "page": "审核导航",
+      "url": "https://review-entry.invalid/",
+      "mode": "REVIEW_LANDING_SYNTHETIC_READ_ONLY",
+      "auth": "entry-token -> opaque Secure HttpOnly SameSite=Strict cookie; server expiry/revoke",
+      "data": "none"
+    },
+    {
+      "page": "App",
+      "url": "https://review-entry.invalid/?workspace=legacy",
+      "mode": "LEGACY",
+      "login": "POST /api/ops/login",
+      "api": "/api/ops/{restaurants,activities,orders,refunds,reports,reviews,blacklist,audit-logs,financial-cases}",
+      "upstream": "http://127.0.0.1:3000",
+      "models": [
+        "Order",
+        "Payment",
+        "Refund"
+      ],
+      "runtime": "STATIC_BUILD_LOCAL_SYNTHETIC"
+    },
+    {
+      "page": "ControlledIdentityWorkspace -> FormalBusinessWorkspace",
+      "url": "https://review-entry.invalid/?workspace=controlled",
+      "mode": "V11_FORMAL_HANDLERS_SYNTHETIC_TRANSPORT",
+      "login": "POST /api/v11/ops/login then GET /api/v11/ops/identity",
+      "api": [
+        "/api/v11/formal/supply-proposals",
+        "/api/v11/formal/fulfillment-registrations",
+        "/api/v11/ops/formal/refund-requests",
+        "/api/v11/ops/formal/rights",
+        "/api/v11/ops/formal/core-changes",
+        "/api/v11/formal/responsibility-cancellations"
+      ],
+      "models": [
+        "V11Registration",
+        "V11Membership",
+        "V11SupplyRevision",
+        "V11RefundInstruction",
+        "V11Request"
+      ],
+      "upstream": "http://127.0.0.1:57286",
+      "scope": "CI_TEST_NEW_OWNED_DATABASE_WITH_SYNTHETIC_POLICY_AUTHORITY_NOT_PRODUCTION_SIGNOFF",
+      "apiBaseAtReview": "public page origin",
+      "credentials": "gateway-specific same-origin adapter + session-bound Bearer; original controlled source remains omit",
+      "sourceCandidate": "78a17d3ec54f3dd2e8b45480aa5ad3a9a9e4f955e9521e54a345ac1979d2e598"
+    },
+    {
+      "page": "PrelaunchWorkspace",
+      "url": "http://127.0.0.1:5173/?workspace=prelaunch",
+      "mode": "LOCAL_SIMULATION_ONLY",
+      "login": "POST /api/prelaunch/v11/auth/login",
+      "api": "/api/prelaunch/v11/*",
+      "models": [
+        "V11Registration_SIMULATION_scope"
+      ],
+      "external": "NOT_EXPOSED_404_WORKSPACE_DENIED",
+      "note": "original compiled client only loopback; not reclassified as formal"
+    }
+  ],
+  "businessWrites": "gateway deny; only exact two authentication routes allowed",
+  "independentNonLocalBrowser": "NOT_VERIFIED"
+}
