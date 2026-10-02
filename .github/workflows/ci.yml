@@ -1,0 +1,80 @@
+name: Isolated baseline
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16.14-alpine
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_DB: fanju_ci
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci -d fanju_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 12
+    env:
+      DATABASE_URL: postgresql://ci@127.0.0.1:5432/fanju_ci
+      NODE_ENV: test
+      APP_ENV: ci
+      RUN_DB_TESTS: '1'
+      LOCAL_DEMO_ENABLED: 'false'
+      AUTH_PROVIDER: mock
+      PHONE_PROVIDER: mock
+      PAYMENT_PROVIDER: mock
+      REFUND_PROVIDER: mock
+      WECHAT_PAY_ENABLED: 'false'
+      FEATURE_REAL_WECHAT_PAY: 'false'
+      TARO_APP_API_BASE_URL: https://api.example.invalid
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.23.1
+          cache: pnpm
+      - name: Generate isolated session signing material
+        run: node -e 'require("fs").appendFileSync(process.env.GITHUB_ENV, "SESSION_SECRET=" + require("crypto").randomBytes(48).toString("hex") + "\n")'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec prisma migrate deploy
+      - run: pnpm test:ci
+      - run: pnpm typecheck
+      - run: pnpm build
+      - run: pnpm probe:api:state-machine
+      - run: pnpm check:copy && pnpm check:secrets
+      - run: pnpm --filter @timeleft-shanghai/api deploy --prod "$RUNNER_TEMP/fanju-api"
+      - run: pnpm verify:release "$RUNNER_TEMP/fanju-api"
+        env:
+          NODE_ENV: production
+          # Inert fixtures for startup/DB-only smoke: no identity or funding request is sent.
+          AUTH_PROVIDER: wechat
+          PHONE_PROVIDER: wechat
+          PAYMENT_PROVIDER: wechat
+          REFUND_PROVIDER: wechat
+          WECHAT_PAY_ENABLED: 'true'
+          NEW_PAYMENTS_ENABLED: 'false'
+          WECHAT_MINIAPP_APP_ID: wx_test_app_id
+          WECHAT_MINIAPP_APP_SECRET: wx_test_secret
+          WECHAT_PAY_MCH_ID: test_mch_id
+          WECHAT_PAY_API_V3_KEY: test_api_v3_key
+          WECHAT_PAY_PRIVATE_KEY_PATH: /unused-test-key
+          WECHAT_PAY_CERT_SERIAL_NO: test_cert_serial
+          WECHAT_PAY_PLATFORM_CERT_PATH: /unused-test-cert
+          WECHAT_PAY_CALLBACK_URL: https://example.invalid/pay
+          WECHAT_REFUND_CALLBACK_URL: https://example.invalid/refund
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: baseline-evidence
+          path: |
+            artifacts/
+            apps/ops/dist/
+            apps/miniapp/dist/
+          if-no-files-found: error

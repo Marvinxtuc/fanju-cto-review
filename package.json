@@ -1,0 +1,46 @@
+{
+  "name": "timeleft-shanghai-mvp",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "start:original-recovery-worker": "pnpm --filter @timeleft-shanghai/api exec node dist/funding/original-recovery-worker.js",
+    "build": "pnpm db:generate && pnpm -r build",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:validate": "prisma validate",
+    "dev:api": "pnpm --filter @timeleft-shanghai/api dev",
+    "check:copy": "tsx scripts/check-visible-copy.ts",
+    "check:secrets": "tsx scripts/check-secrets.ts",
+    "check:pii": "pnpm check:secrets",
+    "probe:api:state-machine": "pnpm prepare:test && tsx services/api/src/probe-state-machine.ts",
+    "test": "pnpm prepare:test && pnpm -r test",
+    "test:api:db": "pnpm prepare:test && RUN_DB_TESTS=1 pnpm --filter @timeleft-shanghai/api test",
+    "test:providers": "pnpm prepare:test && pnpm --filter @timeleft-shanghai/api exec vitest run src/providers.test.ts",
+    "typecheck": "pnpm prepare:test && pnpm -r typecheck",
+    "prepare:test": "pnpm db:generate && pnpm --filter @timeleft-shanghai/shared build",
+    "test:ci": "pnpm prepare:test && node scripts/test-ci.mjs",
+    "verify:release": "node scripts/verify-release.mjs",
+    "start:formal-business-worker": "pnpm --filter @timeleft-shanghai/api exec node dist/prelaunch/formal-business-worker.js",
+    "start:formal-hold-expiry-worker": "pnpm --filter @timeleft-shanghai/api exec node dist/prelaunch/formal-hold-expiry-worker.js",
+    "start:formal-payment-close-worker": "pnpm --filter @timeleft-shanghai/api exec node dist/prelaunch/formal-payment-close-worker.js"
+  },
+  "devDependencies": {
+    "@types/node": "26.0.0",
+    "@types/pg": "8.15.6",
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.7",
+    "@prisma/client": "7.8.0",
+    "prisma": "7.8.0",
+    "tsx": "4.22.4",
+    "typescript": "6.0.3",
+    "vitest": "4.1.9"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "18.3.31",
+      "@types/react-dom": "18.3.7"
+    }
+  }
+}

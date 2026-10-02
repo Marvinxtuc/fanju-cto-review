@@ -1,0 +1,402 @@
+[
+  {
+    "label": "refund-query-conflict",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "exec",
+      "vitest",
+      "run",
+      "src/funding/receipts.test.ts",
+      "src/reconciliation/service.test.ts"
+    ],
+    "exit": 1,
+    "seconds": 6.97
+  },
+  {
+    "label": "refund-query-conflict-fixed",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "exec",
+      "vitest",
+      "run",
+      "src/funding/receipts.test.ts",
+      "src/reconciliation/service.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 1.59
+  },
+  {
+    "label": "refund-query-typecheck",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "typecheck"
+    ],
+    "exit": 0,
+    "seconds": 1.63
+  },
+  {
+    "label": "u1-types",
+    "command": [
+      "pnpm",
+      "typecheck"
+    ],
+    "exit": 0,
+    "seconds": 3.9
+  },
+  {
+    "label": "u1-ci",
+    "command": [
+      "pnpm",
+      "test:ci"
+    ],
+    "exit": 0,
+    "seconds": 14.03
+  },
+  {
+    "label": "u1-client",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/miniapp",
+      "exec",
+      "vitest",
+      "run"
+    ],
+    "exit": 0,
+    "seconds": 0.66
+  },
+  {
+    "label": "u1-build",
+    "command": [
+      "pnpm",
+      "-r",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "--filter",
+      "@timeleft-shanghai/miniapp",
+      "build"
+    ],
+    "exit": 0,
+    "seconds": 5.66
+  },
+  {
+    "label": "u1-final-ci",
+    "command": [
+      "pnpm",
+      "test:ci"
+    ],
+    "exit": 0,
+    "seconds": 14.36
+  },
+  {
+    "label": "u1-deploy",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "deploy",
+      "--prod",
+      "/tmp/fanju-stage2-20260929/api-u1"
+    ],
+    "exit": 0,
+    "seconds": 5.92
+  },
+  {
+    "label": "u1-final-types",
+    "command": [
+      "pnpm",
+      "typecheck"
+    ],
+    "exit": 0,
+    "seconds": 3.94
+  },
+  {
+    "label": "u1-page-client",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/miniapp",
+      "exec",
+      "vitest",
+      "run"
+    ],
+    "exit": 0,
+    "seconds": 0.65
+  },
+  {
+    "label": "u1-page-types",
+    "command": [
+      "pnpm",
+      "typecheck"
+    ],
+    "exit": 0,
+    "seconds": 4.28
+  },
+  {
+    "label": "u1-page-build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/miniapp",
+      "build"
+    ],
+    "exit": 0,
+    "seconds": 4.36
+  },
+  {
+    "label": "u1-reviewed-ci",
+    "command": [
+      "pnpm",
+      "test:ci"
+    ],
+    "exit": 0,
+    "seconds": 14.14
+  },
+  {
+    "label": "u1-manual-build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "build"
+    ],
+    "exit": 0,
+    "seconds": 1.92
+  },
+  {
+    "label": "u1-manual-deploy",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "deploy",
+      "--prod",
+      "/tmp/fanju-stage2-20260929/api-u1-reviewed"
+    ],
+    "exit": 0,
+    "seconds": 6.07
+  },
+  {
+    "label": "u1-refund-review-test",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "exec",
+      "vitest",
+      "run",
+      "src/app.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 3.67
+  },
+  {
+    "label": "u1-refund-build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "build"
+    ],
+    "exit": 0,
+    "seconds": 2.65
+  },
+  {
+    "label": "u1-refund-types",
+    "command": [
+      "pnpm",
+      "typecheck"
+    ],
+    "exit": 0,
+    "seconds": 4.81
+  },
+  {
+    "label": "u1-refund-deploy",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "deploy",
+      "--prod",
+      "/tmp/fanju-stage2-20260929/api-u1-final"
+    ],
+    "exit": 0,
+    "seconds": 6.02
+  },
+  {
+    "label": "u1-accepted-fixes-ci",
+    "command": [
+      "pnpm",
+      "test:ci"
+    ],
+    "exit": 0,
+    "seconds": 14.87
+  },
+  {
+    "label": "u1-scan-build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/miniapp",
+      "build"
+    ],
+    "exit": 0,
+    "seconds": 5.07
+  },
+  {
+    "label": "u1-scan-tests",
+    "command": [
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "services/api/src/app.test.ts",
+      "apps/miniapp/src/api.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 4.82
+  },
+  {
+    "label": "refund-notification-contract",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "exec",
+      "vitest",
+      "run",
+      "src/wechat-pay.test.ts",
+      "src/app.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 4.19
+  },
+  {
+    "label": "refund-notification-ci",
+    "command": [
+      "pnpm",
+      "test:ci"
+    ],
+    "exit": 0,
+    "seconds": 14.39
+  },
+  {
+    "label": "refund-protocol-build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "build"
+    ],
+    "exit": 0,
+    "seconds": 1.96
+  },
+  {
+    "label": "refund-protocol-deploy",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "deploy",
+      "--prod",
+      "/tmp/fanju-stage2-20260929/api-refund-protocol"
+    ],
+    "exit": 0,
+    "seconds": 5.75
+  },
+  {
+    "label": "refund-protocol-types",
+    "command": [
+      "pnpm",
+      "typecheck"
+    ],
+    "exit": 0,
+    "seconds": 4.05
+  },
+  {
+    "label": "fulfillment-review-test",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "exec",
+      "vitest",
+      "run",
+      "src/app.test.ts"
+    ],
+    "exit": 1,
+    "seconds": 4.42
+  },
+  {
+    "label": "fulfillment-review-test",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "exec",
+      "vitest",
+      "run",
+      "src/app.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 3.85
+  },
+  {
+    "label": "fulfillment-build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "build"
+    ],
+    "exit": 0,
+    "seconds": 1.89
+  },
+  {
+    "label": "fulfillment-final-ci",
+    "command": [
+      "pnpm",
+      "test:ci"
+    ],
+    "exit": 0,
+    "seconds": 14.5
+  },
+  {
+    "label": "fulfillment-deploy",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "deploy",
+      "--prod",
+      "/tmp/fanju-stage2-20260929/api-fulfillment-display"
+    ],
+    "exit": 0,
+    "seconds": 5.71
+  },
+  {
+    "label": "release",
+    "command": [
+      "node",
+      "scripts/verify-release.mjs",
+      "/tmp/fanju-stage2-20260929/api-fulfillment-display"
+    ],
+    "exit": 0,
+    "seconds": 0.72
+  },
+  {
+    "label": "fulfillment-types",
+    "command": [
+      "pnpm",
+      "typecheck"
+    ],
+    "exit": 0,
+    "seconds": 4.06
+  }
+]

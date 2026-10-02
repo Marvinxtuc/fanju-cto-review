@@ -1,0 +1,15 @@
+{"label": "install", "command": ["pnpm", "install", "--frozen-lockfile"], "exit": 0, "seconds": 3.54}
+{"label": "migrate", "command": ["pnpm", "exec", "prisma", "migrate", "deploy"], "exit": 0, "seconds": 1.89}
+{"label": "tests", "command": ["pnpm", "test:ci"], "exit": 0, "seconds": 7.32}
+{"label": "typecheck", "command": ["pnpm", "typecheck"], "exit": 0, "seconds": 3.71}
+{"label": "build", "command": ["pnpm", "build"], "exit": 0, "seconds": 9.4}
+{"label": "secrets", "command": ["pnpm", "check:secrets"], "exit": 0, "seconds": 1.22}
+{"label": "copy", "command": ["pnpm", "check:copy"], "exit": 0, "seconds": 1.22}
+{"label": "probe", "command": ["pnpm", "probe:api:state-machine"], "exit": 0, "seconds": 2.93}
+{"label": "package", "command": ["pnpm", "--filter", "@timeleft-shanghai/api", "deploy", "--prod", "/tmp/fanju-stage1-20260929/api-release"], "exit": 0, "seconds": 5.57}
+{"label": "release", "command": ["pnpm", "verify:release", "/tmp/fanju-stage1-20260929/api-release"], "exit": 1, "seconds": 0.31}
+{"label": "build-ops", "command": ["pnpm", "--filter", "@timeleft-shanghai/ops", "build"], "exit": 0, "seconds": 0.64}
+{"label": "release", "command": ["pnpm", "verify:release", "/tmp/fanju-stage1-20260929/api-release"], "exit": 1, "seconds": 0.32}
+{"label": "release", "command": ["pnpm", "verify:release", "/tmp/fanju-stage1-20260929/api-release"], "exit": 0, "seconds": 0.7}
+{"label": "no-weapp-url", "command": ["python3", "-c", "import os,subprocess; e=dict(os.environ); e.pop(\"TARO_APP_API_BASE_URL\",None); r=subprocess.run([\"pnpm\",\"--filter\",\"@timeleft-shanghai/miniapp\",\"build\"],env=e,capture_output=True,text=True); assert r.returncode != 0 and \"requires TARO_APP_API_BASE_URL\" in r.stdout+r.stderr; print(\"Missing production API URL correctly blocks weapp build\")"], "exit": 0, "seconds": 0.75}
+{"label": "standard-test", "command": ["pnpm", "test"], "exit": 0, "seconds": 4.53}

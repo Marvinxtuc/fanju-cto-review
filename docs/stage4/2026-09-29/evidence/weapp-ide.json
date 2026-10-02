@@ -1,0 +1,26 @@
+{
+  "date": "2026-09-29",
+  "ideVersion": "Stable 2.01.2510290",
+  "libraryVersion": "3.17.3",
+  "project": "fanju-local-u1",
+  "artifactDirectory": "/tmp/fanju-stage2-20260929/clean-reviewed/apps/miniapp/dist",
+  "identity": "IDE test identity, no cloud service",
+  "approval": "User explicitly approved running this local test package",
+  "observed": {
+    "import": true,
+    "simulatorStartup": true,
+    "page": "pages/home/index",
+    "visibleOrderEntry": "我的订单",
+    "businessDataLoaded": false
+  },
+  "limitation": "https://api.example.invalid is rejected by IDE request domain validation; no domain check bypass applied",
+  "notRun": [
+    "user WeChat login",
+    "phone authorization",
+    "payment/refund network requests",
+    "device QA",
+    "upload",
+    "publication"
+  ],
+  "transientFailure": "Initial app.json missing during output-directory replacement; files restored and project reload then rendered homepage"
+}

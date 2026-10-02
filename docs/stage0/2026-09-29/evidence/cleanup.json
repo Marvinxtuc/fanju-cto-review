@@ -1,0 +1,8 @@
+{
+  "temporary_db_stopped": true,
+  "tmpfs_data_discarded": true,
+  "static_server_stopped": true,
+  "api_processes_stopped_by_harness": true,
+  "original_5432_untouched": true,
+  "worktree_retained": true
+}

@@ -1,0 +1,7 @@
+{
+  "pg_dump_pg_restore": true,
+  "six_migration_schema": true,
+  "receipt_timestamp_preserved": true,
+  "receipt_count": 1,
+  "timestamp_update_rejected": true
+}

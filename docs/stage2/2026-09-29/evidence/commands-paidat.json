@@ -1,0 +1,145 @@
+[
+  {
+    "label": "prepay-http",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "exec",
+      "vitest",
+      "run",
+      "src/funding/prepay-http.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 1.13
+  },
+  {
+    "label": "scans",
+    "command": [
+      "pnpm",
+      "check:secrets"
+    ],
+    "exit": 0,
+    "seconds": 0.45
+  },
+  {
+    "label": "copy-reviewed",
+    "command": [
+      "pnpm",
+      "check:copy"
+    ],
+    "exit": 0,
+    "seconds": 0.45
+  },
+  {
+    "label": "concurrency-reviewed",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "exec",
+      "vitest",
+      "run",
+      "src/app.test.ts",
+      "src/funding/receipts.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 3.28
+  },
+  {
+    "label": "probe-reviewed",
+    "command": [
+      "pnpm",
+      "probe:api:state-machine"
+    ],
+    "exit": 0,
+    "seconds": 2.66
+  },
+  {
+    "label": "paidat-migrate",
+    "command": [
+      "pnpm",
+      "exec",
+      "prisma",
+      "migrate",
+      "deploy"
+    ],
+    "exit": 0,
+    "seconds": 0.66
+  },
+  {
+    "label": "paidat-typecheck",
+    "command": [
+      "pnpm",
+      "typecheck"
+    ],
+    "exit": 0,
+    "seconds": 3.9
+  },
+  {
+    "label": "paidat-generate",
+    "command": [
+      "pnpm",
+      "db:generate"
+    ],
+    "exit": 0,
+    "seconds": 0.87
+  },
+  {
+    "label": "paidat-build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "build"
+    ],
+    "exit": 0,
+    "seconds": 1.77
+  },
+  {
+    "label": "final-paidat-tests",
+    "command": [
+      "pnpm",
+      "test:ci"
+    ],
+    "exit": 0,
+    "seconds": 14.16
+  },
+  {
+    "label": "paidat-process-migrate",
+    "command": [
+      "env",
+      "DATABASE_URL=postgresql://stage2@127.0.0.1:32771/fanju_stage2_paidat",
+      "pnpm",
+      "exec",
+      "prisma",
+      "migrate",
+      "deploy"
+    ],
+    "exit": 0,
+    "seconds": 1.4
+  },
+  {
+    "label": "paidat-deploy",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "deploy",
+      "--prod",
+      "/tmp/fanju-stage2-20260929/api-paidat"
+    ],
+    "exit": 0,
+    "seconds": 5.72
+  },
+  {
+    "label": "release",
+    "command": [
+      "node",
+      "scripts/verify-release.mjs",
+      "/tmp/fanju-stage2-20260929/api-paidat"
+    ],
+    "exit": 0,
+    "seconds": 0.72
+  }
+]

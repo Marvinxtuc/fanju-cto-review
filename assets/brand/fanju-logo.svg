@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">饭局品牌标志</title>
+  <desc id="desc">由饭票、菜单与餐盘组成的橙色矢量标志</desc>
+  <path fill="#FF6B2C" d="M256 112h512c79.5 0 144 64.5 144 144v160c-35.3 0-64 28.7-64 64s28.7 64 64 64v160c0 79.5-64.5 144-144 144H256c-79.5 0-144-64.5-144-144V544c35.3 0 64-28.7 64-64s-28.7-64-64-64V256c0-79.5 64.5-144 144-144Z"/>
+  <path fill="#FFF4E6" d="M273 224h478c35.9 0 65 29.1 65 65v108.5c-40.3 25.9-40.3 83.1 0 109V735c0 35.9-29.1 65-65 65H273c-35.9 0-65-29.1-65-65V506.5c40.3-25.9 40.3-83.1 0-109V289c0-35.9 29.1-65 65-65Z"/>
+  <path fill="none" stroke="#FF6B2C" stroke-linecap="round" stroke-width="28" d="M360 334h304M360 392h180"/>
+  <circle cx="512" cy="566" r="150" fill="none" stroke="#FF6B2C" stroke-width="30"/>
+  <circle cx="512" cy="566" r="88" fill="none" stroke="#FF6B2C" stroke-width="26"/>
+  <path fill="none" stroke="#FF6B2C" stroke-linecap="round" stroke-width="26" d="m677 457 70-70M703 483l70-70M347 457l-70-70M321 483l-70-70"/>
+  <path fill="none" stroke="#FF6B2C" stroke-linecap="round" stroke-width="28" d="M386 724h252"/>
+</svg>

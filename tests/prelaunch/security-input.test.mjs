@@ -1,0 +1,23 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {randomBytes,randomUUID,scryptSync} from 'node:crypto';
+import {createRequire} from 'node:module';
+import {pathToFileURL} from 'node:url';
+const repo=process.env.PRELAUNCH_SOURCE_ROOT;if(!repo)throw Error('Explicit owned source root required');
+const require=createRequire(`${repo}/services/api/package.json`);const {PrismaPg}=require('@prisma/adapter-pg');const {PrismaClient}=await import(pathToFileURL(`${repo}/services/api/dist/generated/prisma/client.js`));const {verifyOwnedDatabase}=await import(pathToFileURL(`${repo}/services/api/dist/prelaunch/ownership.js`));const {buildPrelaunchApp}=await import(pathToFileURL(`${repo}/services/api/dist/prelaunch/routes.js`));
+const db=new PrismaClient({adapter:new PrismaPg({connectionString:process.env.DATABASE_URL})}),channelDb=new PrismaClient({adapter:new PrismaPg({connectionString:process.env.PRELAUNCH_CHANNEL_DATABASE_URL})});await verifyOwnedDatabase(db,process.env);await verifyOwnedDatabase(channelDb,{...process.env,PRELAUNCH_DATABASE_NAME:process.env.PRELAUNCH_CHANNEL_DATABASE_NAME});
+const base='/api/prelaunch/v11',origin='http://127.0.0.1:47124';
+let app;test.before(async()=>{app=await buildPrelaunchApp(db,{...process.env,PRELAUNCH_CORS_ORIGINS:origin},repo,channelDb);});test.after(async()=>{await app?.close();await Promise.all([db.$disconnect(),channelDb.$disconnect()]);});
+test('PRE039: exact allowed local Origin/PUT/DELETE and external Origin/unsupported method preflights',async()=>{
+ for(const method of ['PUT','DELETE']){const response=await app.inject({method:'OPTIONS',url:base+'/profile',headers:{origin,'access-control-request-method':method,'access-control-request-headers':'authorization,content-type,x-fanju-contract'}});assert.equal(response.statusCode,204);assert.equal(response.headers['access-control-allow-origin'],origin);const methods=response.headers['access-control-allow-methods'].split(',').map(x=>x.trim());assert.deepEqual(new Set(methods),new Set(['GET','POST','PUT','DELETE']));}
+ const deniedOrigin=await app.inject({method:'OPTIONS',url:base+'/profile',headers:{origin:'https://untrusted.invalid','access-control-request-method':'PUT','access-control-request-headers':'authorization,x-fanju-contract'}});assert.equal(deniedOrigin.headers['access-control-allow-origin'],undefined);
+ const deniedMethod=await app.inject({method:'OPTIONS',url:base+'/profile',headers:{origin,'access-control-request-method':'PATCH','access-control-request-headers':'authorization,x-fanju-contract'}});assert.ok(!(deniedMethod.headers['access-control-allow-methods']??'').split(',').map(x=>x.trim()).includes('PATCH'));
+});
+test('BR01/PRE039: forbidden identity/birth fields strictly refuse with zero profile write; adult declaration and empty optional time need no age collection',async()=>{
+ const prefix='security_ui_'+randomUUID().replaceAll('-',''),password=randomBytes(24).toString('hex'),salt=randomBytes(16);const user=await db.user.create({data:{wechatOpenid:prefix,phone:'synthetic-local'}});const actor=await db.v11Actor.create({data:{id:prefix+'_actor',personId:prefix+'_person',userId:user.id,role:'USER',passwordHash:`scrypt:${salt.toString('hex')}:${scryptSync(password,salt,64).toString('hex')}`}});
+ const login=await app.inject({method:'POST',url:base+'/auth/login',headers:{'x-fanju-contract':'prelaunch-v11-1'},payload:{actorId:actor.id,password}});assert.equal(login.statusCode,200);const headers={'x-fanju-contract':'prelaunch-v11-1',authorization:'Bearer '+login.json().token};const valid={gender:'MALE',adultDeclaration:true,serviceCompatible:true,timePreferences:[]};const auditBefore=await db.auditLog.count({where:{metadata:{path:['actorId'],equals:actor.id}}});
+ for(const field of ['idCardNumber','identityCard','birthDate','dateOfBirth']){const response=await app.inject({method:'PUT',url:base+'/profile',headers,payload:{...valid,[field]:'SYNTHETIC_ONLY_NOT_REAL_IDENTITY'}});assert.equal(response.statusCode,400);assert.equal(response.json().error.code,'INVALID_INPUT');assert.equal(await db.v11Profile.count({where:{userId:user.id}}),0);}
+ assert.equal(await db.auditLog.count({where:{metadata:{path:['actorId'],equals:actor.id}}}),auditBefore);
+ const accepted=await app.inject({method:'PUT',url:base+'/profile',headers,payload:valid});assert.equal(accepted.statusCode,200);const profile=await db.v11Profile.findUniqueOrThrow({where:{userId:user.id}});assert.deepEqual(profile.availableTimes,[]);assert.equal(profile.adultConfirmed,true);assert.equal(profile.adaptationConfirmed,true);
+ assert.equal(Object.keys(accepted.json().profile).some(k=>/birth|identity|idcard|age/i.test(k)),false);
+});

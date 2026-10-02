@@ -1,0 +1,23 @@
+{"label": "install", "command": ["pnpm", "install", "--frozen-lockfile"], "exit": 0, "seconds": 3.69}
+{"label": "migrate", "command": ["pnpm", "exec", "prisma", "migrate", "deploy"], "exit": 0, "seconds": 1.9}
+{"label": "tests", "command": ["pnpm", "test:ci"], "exit": 1, "seconds": 6.6}
+{"label": "tests", "command": ["pnpm", "test:ci"], "exit": 0, "seconds": 5.86}
+{"label": "tests-final", "command": ["pnpm", "test:ci"], "exit": 0, "seconds": 5.92}
+{"label": "typecheck", "command": ["pnpm", "typecheck"], "exit": 0, "seconds": 4.46}
+{"label": "build", "command": ["pnpm", "build"], "exit": 0, "seconds": 10.9}
+{"label": "copy", "command": ["pnpm", "check:copy"], "exit": 0, "seconds": 1.51}
+{"label": "secrets", "command": ["pnpm", "check:secrets"], "exit": 0, "seconds": 1.56}
+{"label": "probe", "command": ["pnpm", "probe:api:state-machine"], "exit": 0, "seconds": 3.2}
+{"label": "package", "command": ["pnpm", "--filter", "@timeleft-shanghai/api", "deploy", "--prod", "/tmp/fanju-stage1b-20260929/api-release"], "exit": 0, "seconds": 6.15}
+{"label": "release", "command": ["pnpm", "verify:release", "/tmp/fanju-stage1b-20260929/api-release"], "exit": 0, "seconds": 0.67}
+{"label": "ops-regression", "command": ["pnpm", "--filter", "@timeleft-shanghai/ops", "test"], "exit": 0, "seconds": 0.73}
+{"label": "ops-types", "command": ["pnpm", "--filter", "@timeleft-shanghai/ops", "typecheck"], "exit": 0, "seconds": 0.86}
+{"label": "ops-build-fixed", "command": ["pnpm", "--filter", "@timeleft-shanghai/ops", "build"], "exit": 0, "seconds": 0.7}
+{"label": "tests-reviewed", "command": ["pnpm", "test:ci"], "exit": 0, "seconds": 6.0}
+{"label": "release", "command": ["pnpm", "verify:release", "/tmp/fanju-stage1b-20260929/api-release"], "exit": 0, "seconds": 0.66}
+{"label": "refresh-migrate", "command": ["pnpm", "exec", "prisma", "migrate", "deploy"], "exit": 0, "seconds": 0.82}
+{"label": "refresh-build", "command": ["pnpm", "build"], "exit": 0, "seconds": 7.03}
+{"label": "refresh-deploy", "command": ["pnpm", "--filter", "@timeleft-shanghai/api", "deploy", "--prod", "/tmp/fanju-stage1b-20260929/api-release-final"], "exit": 0, "seconds": 6.13}
+{"label": "refresh-typecheck", "command": ["pnpm", "typecheck"], "exit": 0, "seconds": 3.73}
+{"label": "release", "command": ["pnpm", "verify:release", "/tmp/fanju-stage1b-20260929/api-release-final"], "exit": 0, "seconds": 0.64}
+{"label": "refresh-tests", "command": ["pnpm", "test:ci"], "exit": 0, "seconds": 6.06}

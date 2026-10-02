@@ -1,0 +1,30 @@
+import { describe, it, expect } from "vitest";
+import { createPrelaunchClient, prelaunchShanghaiDate, fundingLabel, prelaunchErrorLabel, type PrelaunchSession } from "./prelaunchClient.js";
+function memory() { let current: PrelaunchSession | null = null; return { read: () => current, write: (s: PrelaunchSession) => { current = s; }, clear: () => { current = null; } }; }
+const session = { token: "synthetic-session", actor: { id: "synthetic-user", role: "USER" } };
+describe("prelaunch versioned client", () => {
+  it("requires explicit login and makes no request without a session", async () => { let calls = 0; const c = createPrelaunchClient(async () => { calls++; return { status: 200, data: {} }; }, memory()); await expect(c.call("GET", "/registrations")).rejects.toMatchObject({ code: "SESSION_EXPIRED" }); expect(calls).toBe(0); });
+  it("logs in without accepting a client-provided role", async () => { let data; const store = memory(); const c = createPrelaunchClient(async r => { data = r.data; return { status: 200, data: { version: "prelaunch-v11-1", ...session } }; }, store); await c.login("synthetic-user", "test-password"); expect(data).toEqual({ actorId: "synthetic-user", password: "test-password" }); expect(store.read()).toEqual(session); });
+  it("rejects a legacy response", async () => { const s = memory(); s.write(session); const c = createPrelaunchClient(async () => ({ status: 200, data: { orders: [] } }), s); await expect(c.call("GET", "/registrations")).rejects.toMatchObject({ code: "INCOMPATIBLE_VERSION" }); });
+  it("clears only the matching expired session", async () => { const s = memory(); s.write(session); const c = createPrelaunchClient(async () => ({ status: 401, data: {} }), s); await expect(c.call("GET", "/registrations")).rejects.toMatchObject({ code: "SESSION_EXPIRED" }); expect(s.read()).toBeNull(); });
+  it("rejects an old response after the account changes without clearing the new session", async () => { const s = memory(); s.write(session); const next = { ...session, token: "second-session" }; const c = createPrelaunchClient(async () => { s.write(next); return { status: 401, data: {} }; }, s); await expect(c.call("GET", "/registrations")).rejects.toMatchObject({ code: "SESSION_CHANGED" }); expect(s.read()).toEqual(next); });
+  it("retains recoverable context after network interruption", async () => { const s = memory(); s.write(session); const c = createPrelaunchClient(async () => { throw Error("untrusted secret or material"); }, s); await expect(c.call("POST", "/registrations/example/pay", {})).rejects.toMatchObject({ code: "NETWORK_UNAVAILABLE" }); expect(s.read()).toEqual(session); });
+  it("accepts 202 as pending rather than inventing channel success", async () => { const s = memory(); s.write(session); const c = createPrelaunchClient(async () => ({ status: 202, data: { version: "prelaunch-v11-1", state: "UNKNOWN" } }), s); expect(await c.call("POST", "/registrations/example/pay", {})).toMatchObject({ state: "UNKNOWN" }); });
+  it("reports policy blockers without reflecting untrusted private fields", async () => { const s = memory(); s.write(session); const c = createPrelaunchClient(async () => ({ status: 409, data: { version: "prelaunch-v11-1", error: { code: "BLOCKED_POLICY", blockerIds: ["OP-04", "private-material"], secret: "secret" } } }), s); await expect(c.call("POST", "/registrations/example/cancel", {})).rejects.toMatchObject({ code: "BLOCKED_POLICY", blockers: ["OP-04"] }); });
+  it.each(["//outside", "/../secret", "/orders#secret"])("rejects invalid paths %s before network access", async path => { let calls = 0; const c = createPrelaunchClient(async () => { calls++; return { status: 200, data: {} }; }, memory()); await expect(c.call("GET", path, undefined, false)).rejects.toMatchObject({ code: "INVALID_INPUT" }); expect(calls).toBe(0); });
+  it("formats both components without calling retained deposit accounting income", () => { expect(fundingLabel(1234, 5000)).toBe("服务费 ¥12.34 · 保证金 ¥50.00 · 合计 ¥62.34，餐费到店自理"); });
+  it("never echoes unknown error text", () => { expect(prelaunchErrorLabel("SECRET_VALUE", ["private-material"])).not.toContain("SECRET_VALUE"); });
+});
+
+describe("complete cursor recovery",()=>{
+  it("keeps financial rows beyond the first 100 without depending on UI counts",async()=>{const store=memory();store.write(session);const paths:string[]=[];const c=createPrelaunchClient(async req=>{paths.push(req.path);const second=req.path.includes("cursor=");return {status:200,data:{version:"prelaunch-v11-1",rows:second?[{id:"101"}]:Array.from({length:100},(_,i)=>({id:String(i+1)})),nextCursor:second?null:"100"}};},store);expect(await c.list("/ops/registrations","rows")).toHaveLength(101);expect(paths[1]).toContain("?cursor=100");});
+  it("rejects a repeating cursor rather than hanging or silently truncating",async()=>{const store=memory();store.write(session);const c=createPrelaunchClient(async()=>({status:200,data:{version:"prelaunch-v11-1",rows:[],nextCursor:"same"}}),store);await expect(c.list("/ops/registrations","rows")).rejects.toMatchObject({code:"INCOMPATIBLE_VERSION"});});
+});
+
+it("shows order clocks in the Shanghai calendar rather than the browser timezone",()=>{expect(prelaunchShanghaiDate("2026-10-01T16:15:00.000Z")).toBe("2026/10/02 00:15（上海时间）");expect(prelaunchShanghaiDate("invalid")).toBe("时间待核实");});
+
+it("never combines paginated personal rows when login changes between page promises",async()=>{
+ const store=memory();store.write(session);const next={token:"synthetic-second",actor:{id:"other-synthetic-user",role:"USER"}};const tokens:Array<string|undefined>=[];
+ const c=createPrelaunchClient(async req=>{tokens.push(req.token);if(tokens.length===1)queueMicrotask(()=>queueMicrotask(()=>store.write(next)));return {status:200,data:{version:"prelaunch-v11-1",rows:[{id:req.token===session.token?"first-user-row":"second-user-row"}],nextCursor:tokens.length===1?"page-one":null}};},store);
+ await expect(c.list("/registrations","rows")).rejects.toMatchObject({code:"SESSION_CHANGED"});expect(tokens).toEqual([session.token]);expect(store.read()).toEqual(next);
+});

@@ -1,0 +1,88 @@
+[
+  {
+    "label": "funding-final-build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "build"
+    ],
+    "exit": 0,
+    "seconds": 2.33
+  },
+  {
+    "label": "queue-clock",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "exec",
+      "vitest",
+      "run",
+      "src/jobs/queue.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 0.82
+  },
+  {
+    "label": "funding-clock-ci",
+    "command": [
+      "pnpm",
+      "test:ci"
+    ],
+    "exit": 0,
+    "seconds": 14.23
+  },
+  {
+    "label": "funding-clock-build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "build"
+    ],
+    "exit": 0,
+    "seconds": 1.9
+  },
+  {
+    "label": "funding-clock-types",
+    "command": [
+      "pnpm",
+      "typecheck"
+    ],
+    "exit": 0,
+    "seconds": 4.06
+  },
+  {
+    "label": "funding-final-probe",
+    "command": [
+      "pnpm",
+      "probe:api:state-machine"
+    ],
+    "exit": 0,
+    "seconds": 3.12
+  },
+  {
+    "label": "funding-final-deploy",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "deploy",
+      "--prod",
+      "/tmp/fanju-stage2-20260929/api-funding-final"
+    ],
+    "exit": 0,
+    "seconds": 6.22
+  },
+  {
+    "label": "release",
+    "command": [
+      "node",
+      "scripts/verify-release.mjs",
+      "/tmp/fanju-stage2-20260929/api-funding-final"
+    ],
+    "exit": 0,
+    "seconds": 0.73
+  }
+]

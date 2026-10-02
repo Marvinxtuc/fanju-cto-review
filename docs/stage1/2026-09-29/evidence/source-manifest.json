@@ -1,0 +1,81 @@
+{
+  "base": "bc25f5b4859623338829ec09278c72619392141c",
+  "files": [
+    {
+      "path": ".env.example",
+      "sha256": "db0439b9630fe1e1a2f0b6cddd6c0fe95e7e8f962acbc5dbba9148cab0238b5d"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "b2340d51493c408ed9df57c22269a62f0928018afdb2888dc1fa9d3ba7cb14c6"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "e23a44349f5590918ca1101c194835b14b0f3143f738f13ea9810d6236aabbda"
+    },
+    {
+      "path": "apps/miniapp/config/index.ts",
+      "sha256": "27631a0c9d209035cece1a118ea7425bd6ed444bd1c2fbb0e0a503257551f8b3"
+    },
+    {
+      "path": "apps/miniapp/package.json",
+      "sha256": "d65e2b47fee7e8e8c092e3ac30ebb564fc7262c3c398714ad056be585589ee3f"
+    },
+    {
+      "path": "apps/ops/package.json",
+      "sha256": "1144afefe463934fc11b34ea78098c4cc79e97a01f3b8ca248fed9d76716b091"
+    },
+    {
+      "path": "apps/ops/src/api.ts",
+      "sha256": "438352dffdd36e350384e6111b7ed18a5ffd5c1ce8b882e3a83754291110d579"
+    },
+    {
+      "path": "apps/ops/src/vite-env.d.ts",
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "path": "package.json",
+      "sha256": "9df5f78d745864c32f0888caf3fa2d519039f76c8695ed958f947dc68abd5bb7"
+    },
+    {
+      "path": "packages/shared/package.json",
+      "sha256": "8185fac7c48c032385a9ffa348b50c6f72b41bf246db807096e314ae8db30726"
+    },
+    {
+      "path": "scripts/test-ci.mjs",
+      "sha256": "c0fbfe27ff53fff2470b1f340bced724e471acc88393781ca46f145cf77e9e1c"
+    },
+    {
+      "path": "scripts/verify-release.mjs",
+      "sha256": "f9b2726d06abbb9b8ec0e935ced193093cb46c534d255c70416d72f1e90f8094"
+    },
+    {
+      "path": "services/api/package.json",
+      "sha256": "d675fa3ea8d44fef4e3fa675e604071bb97bf6f5e13c10d8a848dfbf8d134c39"
+    },
+    {
+      "path": "services/api/src/app.test.ts",
+      "sha256": "570aa021599ebdc0741086a7f7230a1eab88610d94e44af46a6913f75a7be647"
+    },
+    {
+      "path": "services/api/src/app.ts",
+      "sha256": "eab2d97e5ba29a7befccd4c9cfdc8c63e21004113ab6d9b0a0d8ee560c32d583"
+    },
+    {
+      "path": "services/api/src/auth.ts",
+      "sha256": "eb4280ecc035fbd81811f90581d10402c45c8182543d4697927919da4cc8ef2a"
+    },
+    {
+      "path": "services/api/src/config.ts",
+      "sha256": "9bb77c307bbed2bb6923f3e0504baf493b2e2d78412753802ef1d58475b3c3ee"
+    },
+    {
+      "path": "services/api/src/probe-state-machine.ts",
+      "sha256": "dd53efdcf4aaed8450af240dc0d6c70056ad1dee2883d0168c2777daa34811d8"
+    },
+    {
+      "path": "services/api/src/security.test.ts",
+      "sha256": "a3146bd8d5a3d4b91bb81e2d76f39afbbdc47d955b00adf5af227e1046db58a8"
+    }
+  ]
+}

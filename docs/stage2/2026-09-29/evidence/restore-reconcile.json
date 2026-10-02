@@ -1,0 +1,8 @@
+{
+  "restoreFromPreCallbackDump": true,
+  "missingLocalEventsAndJobs": true,
+  "channelExportRestoredReceipt": true,
+  "duplicateImportIdempotent": true,
+  "newPaymentsEnabled": false,
+  "workerExit": 0
+}

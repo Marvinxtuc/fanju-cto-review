@@ -1,0 +1,17 @@
+{
+  "oldImplementation": {
+    "exit": 1,
+    "assertion": "immediate job not claimable with application clock one hour ahead",
+    "scope": "isolated build copy, restored in finally"
+  },
+  "fixedImplementation": {
+    "focusedPassed": 8,
+    "fullCIPassed": 127,
+    "fullCISkipped": 0
+  },
+  "logs": [
+    "/tmp/fanju-stage2-20260929/clock-regression-before.log",
+    "/tmp/fanju-stage2-20260929/queue-clock.log",
+    "/tmp/fanju-stage2-20260929/funding-clock-ci.log"
+  ]
+}

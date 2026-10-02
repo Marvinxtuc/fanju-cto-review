@@ -1,0 +1,11 @@
+import {beforeEach,it,expect,vi} from 'vitest';
+const mock=vi.hoisted(()=>({storage:new Map<string,string>(),userId:'user-a',current:true,request:vi.fn()}));
+vi.mock('@tarojs/taro',()=>({default:{getStorageSync:(k:string)=>mock.storage.get(k),setStorageSync:(k:string,v:string)=>mock.storage.set(k,v)}}));
+vi.mock('./api',()=>({ensureAuthenticatedUser:async()=> 'token',initializeAvailableV11Identity:async()=>({userId:mock.userId}),isCurrentUserSession:()=>mock.current,formalRequest:mock.request}));
+import {submitFormalRight,validateFormalRight,listFormalRights} from './formal-rights-api';
+const row={id:'right',kind:'ACCESS',acceptedAt:'2026-10-02T00:00:00Z',state:'AWAITING_MANUAL_PROCESSING',referenceRequestId:null,scope:'REQUEST_INTAKE_ONLY',actionsApplied:false};
+beforeEach(()=>{mock.storage.clear();mock.userId='user-a';mock.current=true;vi.clearAllMocks();mock.request.mockImplementation(async(_path,options)=>({request:{...row,kind:options?.data.kind??'ACCESS'}}));});
+it('separates durable keys by actual user, kind and reference while replaying the same request',async()=>{await submitFormalRight('ACCESS');await submitFormalRight('ACCESS');expect(mock.request.mock.calls[0]![1].data.businessKey).toBe(mock.request.mock.calls[1]![1].data.businessKey);await submitFormalRight('EXPORT');await submitFormalRight('ACCESS','original');mock.userId='user-b';await submitFormalRight('ACCESS');expect(new Set(mock.request.mock.calls.map(c=>c[1].data.businessKey)).size).toBe(4);expect(mock.request.mock.calls[3]![1].data).toMatchObject({kind:'ACCESS',referenceRequestId:'original'});});
+it('does not send on a changed session',async()=>{mock.current=false;await expect(submitFormalRight('CLOSURE')).rejects.toThrow('登录状态已改变');expect(mock.request).not.toHaveBeenCalled();});
+it.each([{kind:'DELETE'},{acceptedAt:'never'},{actionsApplied:true},{referenceRequestId:{}},{scope:'APPLIED'}])('rejects malformed or falsely applied record %j',change=>{expect(()=>validateFormalRight({...row,...change})).toThrow('记录不完整');});
+it('rejects malformed list pagination instead of inventing empty history',async()=>{mock.request.mockResolvedValue({requests:[row],nextCursor:{}});await expect(listFormalRights()).rejects.toThrow('记录不完整');});

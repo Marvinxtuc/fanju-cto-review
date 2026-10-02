@@ -1,0 +1,225 @@
+[
+  {
+    "label": "api-deploy-bundle",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/api",
+      "deploy",
+      "--prod",
+      "/tmp/fanju-stage0-20260929/api-release"
+    ],
+    "exit_code": 0,
+    "timeout": false,
+    "seconds": 8.64,
+    "log_sha256": "d46355dafea9b8ce6d153f331b4093691758779e5a4046257686817aaf24ca73"
+  },
+  {
+    "label": "api-dist-start",
+    "command": [
+      "node",
+      "services/api/dist/server.js"
+    ],
+    "exit_code": 124,
+    "timeout": true,
+    "seconds": 12.02,
+    "log_sha256": "e016a1a297e528d69f4014d1bbb2b810d947defe3402e922f72f9f334589d008"
+  },
+  {
+    "label": "api-release-smoke",
+    "source_present": true,
+    "dist_present": true,
+    "status": "passed",
+    "http_status": 200,
+    "health": {
+      "ok": true
+    },
+    "process_exit_before_cleanup": null,
+    "log_sha256": "def62278bd59f36d283af951d061405c94bf1b499d37600ed4ffcd7319bcf1b4"
+  },
+  {
+    "label": "api-release-source-free",
+    "source_present": false,
+    "shared_source_present": false,
+    "status": "passed",
+    "/health": {
+      "http": 200,
+      "body": {
+        "ok": true
+      }
+    },
+    "/api/activities": {
+      "http": 200,
+      "body": {
+        "activities": []
+      }
+    },
+    "F01-isolated-reproduction": {
+      "http": 200,
+      "returnedRole": "SUPER_ADMIN",
+      "tokenReturned": true
+    },
+    "log_sha256": "a520beafdce02554228bbe95ceee43fae5c586facc8e158dae9227f00ff9c985"
+  },
+  {
+    "label": "copy-scan",
+    "command": [
+      "pnpm",
+      "check:copy"
+    ],
+    "exit_code": 0,
+    "timeout": false,
+    "seconds": 0.4,
+    "log_sha256": "328e72c621b0fe00e8d84068e3caab622b8742ee9f4c6becc02d036578237973"
+  },
+  {
+    "label": "db-generate",
+    "command": [
+      "pnpm",
+      "db:generate"
+    ],
+    "exit_code": 0,
+    "timeout": false,
+    "seconds": 0.77,
+    "log_sha256": "327ff17dcbc624c44e6380fcf728f399210d2c65fcf0399b84426857c1f46035"
+  },
+  {
+    "label": "db-validate",
+    "command": [
+      "pnpm",
+      "db:validate"
+    ],
+    "exit_code": 0,
+    "timeout": false,
+    "seconds": 1.47,
+    "log_sha256": "1c22a7c7368e2f723c04175cb7c89c3ead53d787a3cb5182b75db8b6a709ca50"
+  },
+  {
+    "label": "existing-build",
+    "command": [
+      "pnpm",
+      "build"
+    ],
+    "exit_code": 0,
+    "timeout": false,
+    "seconds": 3.7,
+    "log_sha256": "436c215a3ef11970e76f703ab0724d8867ea3557207ef338e78078467716f701"
+  },
+  {
+    "label": "install",
+    "command": [
+      "pnpm",
+      "install",
+      "--frozen-lockfile"
+    ],
+    "exit_code": 0,
+    "timeout": false,
+    "seconds": 3.99,
+    "log_sha256": "1c059bb94181c5b2162b88ae80ffe59a51dafd4a16a2e0af5585d2c159e205fe"
+  },
+  {
+    "label": "migrate-deploy",
+    "command": [
+      "pnpm",
+      "exec",
+      "prisma",
+      "migrate",
+      "deploy"
+    ],
+    "exit_code": 0,
+    "timeout": false,
+    "seconds": 1.04,
+    "log_sha256": "30b9af136c02e761883fa83e675061bc505ef1f02294b2a1f86557badacb1fa0"
+  },
+  {
+    "label": "ops-build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/ops",
+      "exec",
+      "vite",
+      "build"
+    ],
+    "exit_code": 0,
+    "timeout": false,
+    "seconds": 3.08,
+    "log_sha256": "ca6d5fee26a5dbf75223653c20d7c7fa4e9952292be55395e075d999818bf8b9"
+  },
+  {
+    "label": "secret-scan",
+    "command": [
+      "pnpm",
+      "check:secrets"
+    ],
+    "exit_code": 0,
+    "timeout": false,
+    "seconds": 0.41,
+    "log_sha256": "b5b19322d6ef8585d4a2b0d4065bfbcc1776241eea2d817dc9bb8ae7ada56318"
+  },
+  {
+    "label": "state-probe",
+    "command": [
+      "pnpm",
+      "probe:api:state-machine"
+    ],
+    "exit_code": 0,
+    "timeout": false,
+    "seconds": 2.06,
+    "log_sha256": "04b955f26a0937e40a42eb1df4414829d2f081339992adf5c07210c703a91cc9"
+  },
+  {
+    "label": "tests-after-build",
+    "command": [
+      "env",
+      "RUN_DB_TESTS=1",
+      "pnpm",
+      "test"
+    ],
+    "exit_code": 0,
+    "timeout": false,
+    "seconds": 3.58,
+    "log_sha256": "9e46b204847c083295fef203ccdce5e53b456b0cfc50748db390d273f633a561"
+  },
+  {
+    "label": "tests-db-enabled",
+    "command": [
+      "env",
+      "RUN_DB_TESTS=1",
+      "pnpm",
+      "test"
+    ],
+    "exit_code": 1,
+    "timeout": false,
+    "seconds": 3.88,
+    "log_sha256": "9a23e2bba57e3bc4ff3dc8001dbe0e9d70ea912f15e13962c346644d1a488f48"
+  },
+  {
+    "label": "typecheck",
+    "command": [
+      "pnpm",
+      "typecheck"
+    ],
+    "exit_code": 0,
+    "timeout": false,
+    "seconds": 2.94,
+    "log_sha256": "1f1f8fa73024b4b9e5ec66f670461980b27aab5ea4f7f3b211a35caca4fab661"
+  },
+  {
+    "label": "weapp-build",
+    "command": [
+      "pnpm",
+      "--filter",
+      "@timeleft-shanghai/miniapp",
+      "exec",
+      "taro",
+      "build",
+      "--type",
+      "weapp"
+    ],
+    "exit_code": 0,
+    "timeout": false,
+    "seconds": 7.43,
+    "log_sha256": "a20845a8074a0c1841d5ef1d82e602712d3bc6dd2339fe68ce709f29472776df"
+  }
+]

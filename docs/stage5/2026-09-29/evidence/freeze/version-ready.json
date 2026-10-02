@@ -1,0 +1,21 @@
+{
+  "sha": "2e7e012e1f58e093f5913cdaeaa400b4bb7e30a7",
+  "APIReadyStatus": 200,
+  "result": {
+    "ok": true,
+    "missingModes": [],
+    "billCovered": null
+  },
+  "heartbeats": [
+    {
+      "mode": "events-only",
+      "version": "2e7e012e1f58e093f5913cdaeaa400b4bb7e30a7"
+    },
+    {
+      "mode": "inbox-only",
+      "version": "2e7e012e1f58e093f5913cdaeaa400b4bb7e30a7"
+    }
+  ],
+  "versionBinding": "Worker versions checked separately in DB; /ready checks mode and freshness, does not itself enforce version equality",
+  "externalRequests": 0
+}

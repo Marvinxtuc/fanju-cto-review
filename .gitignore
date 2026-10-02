@@ -1,0 +1,18 @@
+node_modules/
+dist/
+coverage/
+services/api/src/generated/
+.turbo/
+.superpowers/
+.env
+.env.*
+!.env.example
+.DS_Store
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Generated build/test evidence (curated reports are stored under docs).
+.swc/
+artifacts/

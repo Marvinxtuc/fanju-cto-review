@@ -1,0 +1,639 @@
+{
+  "scope": "A2 funding fixes and database-clock enqueue; 127 total",
+  "suites": [
+    {
+      "suite": "packages-shared",
+      "total": 18,
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0,
+      "assertions": [
+        {
+          "file": "packages/shared/src/rules/shared.test.ts",
+          "tests": [
+            {
+              "name": "forbidden visible copy allows restaurant-experience copy",
+              "status": "passed"
+            },
+            {
+              "name": "forbidden visible copy finds forbidden positioning words",
+              "status": "passed"
+            },
+            {
+              "name": "activity status allows publish flow and hides drafts",
+              "status": "passed"
+            },
+            {
+              "name": "activity status rejects terminal transitions",
+              "status": "passed"
+            },
+            {
+              "name": "order status allows payment success once",
+              "status": "passed"
+            },
+            {
+              "name": "order status rejects paying closed orders",
+              "status": "passed"
+            },
+            {
+              "name": "table formation forms a standard six-person table",
+              "status": "passed"
+            },
+            {
+              "name": "table formation splits nine people into two valid tables",
+              "status": "passed"
+            },
+            {
+              "name": "table formation does not form with three people",
+              "status": "passed"
+            },
+            {
+              "name": "activity info visibility shows only basic info before grouping",
+              "status": "passed"
+            },
+            {
+              "name": "activity info visibility shows restaurant after grouping before T-24",
+              "status": "passed"
+            },
+            {
+              "name": "activity info visibility shows address at T-24 for valid grouped users",
+              "status": "passed"
+            },
+            {
+              "name": "activity info visibility does not show info to refunded users",
+              "status": "passed"
+            },
+            {
+              "name": "refund decisions auto-refunds group failures",
+              "status": "passed"
+            },
+            {
+              "name": "refund decisions requires ops review before T-24",
+              "status": "passed"
+            },
+            {
+              "name": "refund decisions requires ops review within T-24",
+              "status": "passed"
+            },
+            {
+              "name": "pricing uses service fee as the order amount",
+              "status": "passed"
+            },
+            {
+              "name": "pricing rejects invalid service fee amounts",
+              "status": "passed"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "suite": "services-api",
+      "total": 96,
+      "passed": 96,
+      "failed": 0,
+      "skipped": 0,
+      "assertions": [
+        {
+          "file": "services/api/src/app.test.ts",
+          "tests": [
+            {
+              "name": "api mock MVP flow allows the operations console to preflight manual table-group adjustments",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow creates an order with server-side service fee and handles payment idempotently",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow requires the order owner to confirm the current agreement before creating an order",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow stores a complete profile for its owner and rejects incomplete submissions",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow authenticates a controlled administrator in PostgreSQL and revokes a downgraded session",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow serializes twenty cancellations and approvals into one refund and one recovery job",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow keeps signed callbacks active while new charges are stopped, and hides them for mock providers",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow applies a signed refund callback once after ops approval",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow uses wechat auth provider results to create idempotent users",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow uses wechat phone provider results and preserves existing phone on failure",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow creates ops-review refunds for user cancellation and completes refund idempotently",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow blocks forbidden user-visible activity copy",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow does not allow a user to read another user's order",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow unlocks order information in stages without exposing the address early",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow lets a user report only their completed order and records ops resolution",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow enforces activity status gates when creating orders",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow rejects expired registration, duplicate active orders, and capacity overflow",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow rejects illegal payment callbacks without changing protected order states",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow requires ops approval before refund callbacks and blocks refunded regressions",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow blocks new refund callbacks after an order is already refunded",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow validates table size configuration",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow lets ops preview paid grouping candidates, draft tables idempotently, and confirm them",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow lets ops manually rearrange a locking table draft without adding or dropping paid orders",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow rejects a grouping draft when fewer than four paid orders are eligible",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow lets ops mark an undersized activity as group failed after registration closes without creating refunds",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow lets ops add a blacklist entry, blocks new registration, and requires super admin to remove it",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow lets an order owner create or update a completed-order review and rejects other order states",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow lets ops manually start and complete a past grouped activity, then unlocks the review path",
+              "status": "passed"
+            },
+            {
+              "name": "api mock MVP flow serves minimal ops list endpoints for restaurants, activities, orders, refunds, and audits",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "services/api/src/auth.test.ts",
+          "tests": [
+            {
+              "name": "session and controlled admin authentication rejects missing, development and placeholder keys outside demos",
+              "status": "passed"
+            },
+            {
+              "name": "session and controlled admin authentication rejects old unlimited tokens, expiry, wrong audience and revoked users",
+              "status": "passed"
+            },
+            {
+              "name": "session and controlled admin authentication takes role only from server config and rechecks role, account version and account existence",
+              "status": "passed"
+            },
+            {
+              "name": "session and controlled admin authentication rejects disabled accounts and limits repeated credential attempts",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "services/api/src/config.test.ts",
+          "tests": [
+            {
+              "name": "runtime provider and new payment configuration checks all sixteen provider combinations in local and production environments",
+              "status": "passed"
+            },
+            {
+              "name": "runtime provider and new payment configuration defaults new real payments closed and enforces allowlist and per-payment amount cap",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "services/api/src/providers.test.ts",
+          "tests": [
+            {
+              "name": "wechat provider configuration defaults to mock providers in local development",
+              "status": "passed"
+            },
+            {
+              "name": "wechat provider configuration rejects mock payment in production unless explicitly allowed",
+              "status": "passed"
+            },
+            {
+              "name": "wechat provider configuration rejects wechat payment provider when required config is missing",
+              "status": "passed"
+            },
+            {
+              "name": "wechat provider configuration rejects wechat auth provider when miniapp config is missing",
+              "status": "passed"
+            },
+            {
+              "name": "wechat provider configuration exchanges wechat login code with the jscode2session endpoint",
+              "status": "passed"
+            },
+            {
+              "name": "wechat provider configuration rejects wechat auth errors without falling back to mock",
+              "status": "passed"
+            },
+            {
+              "name": "wechat provider configuration rejects empty wechat login code before calling the channel",
+              "status": "passed"
+            },
+            {
+              "name": "wechat provider configuration exchanges wechat phone code with access token and getuserphonenumber",
+              "status": "passed"
+            },
+            {
+              "name": "wechat provider configuration rejects wechat phone errors without returning a mock phone",
+              "status": "passed"
+            },
+            {
+              "name": "wechat provider configuration does not fall back from wechat auth provider to mock",
+              "status": "passed"
+            },
+            {
+              "name": "wechat provider configuration creates a signed JSAPI payment request without trusting a client amount",
+              "status": "passed"
+            },
+            {
+              "name": "wechat provider configuration creates a signed refund request using local refund and payment references",
+              "status": "passed"
+            },
+            {
+              "name": "wechat provider configuration does not silently succeed when wechat payment provider is configured without a channel response",
+              "status": "passed"
+            },
+            {
+              "name": "offline funding recovery protocols queries the same merchant payment number and signs GET without a request body",
+              "status": "passed"
+            },
+            {
+              "name": "offline funding recovery protocols maps a verified missing order without treating network errors as absence",
+              "status": "passed"
+            },
+            {
+              "name": "offline funding recovery protocols closes by the original number and verifies refund associations",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "services/api/src/security.test.ts",
+          "tests": [
+            {
+              "name": "local demo isolation defaults closed and rejects ambiguous or real-provider demo configurations",
+              "status": "passed"
+            },
+            {
+              "name": "local demo isolation omits demo routes and rejects even valid signed ops tokens in production",
+              "status": "passed"
+            },
+            {
+              "name": "local demo isolation omits demo routes and rejects even valid signed ops tokens in test",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "services/api/src/wechat-pay.test.ts",
+          "tests": [
+            {
+              "name": "WeChat Pay v3 notifications verifies and decrypts a successful payment notification",
+              "status": "passed"
+            },
+            {
+              "name": "WeChat Pay v3 notifications requires a valid signed payment success time",
+              "status": "passed"
+            },
+            {
+              "name": "WeChat Pay v3 notifications rejects altered bodies and stale timestamps before state can change",
+              "status": "passed"
+            },
+            {
+              "name": "WeChat Pay v3 notifications verifies and decrypts a successful refund notification",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "services/api/src/wechat-response.test.ts",
+          "tests": [
+            {
+              "name": "verified bounded channel responses rejects altered bodies, wrong certificate identity and stale signed responses",
+              "status": "passed"
+            },
+            {
+              "name": "verified bounded channel responses verifies exact response bytes before parsing and refuses unsigned success",
+              "status": "passed"
+            },
+            {
+              "name": "verified bounded channel responses recognizes only a signed exact order-not-found error",
+              "status": "passed"
+            },
+            {
+              "name": "verified bounded channel responses bounds response size and disallows credential-bearing redirects",
+              "status": "passed"
+            },
+            {
+              "name": "verified bounded channel responses aborts an actual stalled local HTTP request within the ten-second budget",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "services/api/src/funding/legacy.test.ts",
+          "tests": [
+            {
+              "name": "legacy mock evidence rehearsal claims verified evidence idempotently without changing fulfillment or losing unknown refund budget",
+              "status": "passed"
+            },
+            {
+              "name": "legacy mock evidence rehearsal verifies a historical successful refund only when its channel evidence arrives",
+              "status": "passed"
+            },
+            {
+              "name": "legacy mock evidence rehearsal refuses mismatched evidence or over-reserved legacy refunds atomically",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "services/api/src/funding/prepay-http.test.ts",
+          "tests": [
+            {
+              "name": "HTTP payment response persistence recovery retains intent after storage failure, reuses the original merchant number, and stops parameters at MANUAL",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "services/api/src/funding/receipts.test.ts",
+          "tests": [
+            {
+              "name": "independent monetary facts and event recovery reuses one merchant number across twenty payment attempts and rejects a channel switch",
+              "status": "passed"
+            },
+            {
+              "name": "independent monetary facts and event recovery recovers lost prepayment persistence using the original number and stops at manual review",
+              "status": "passed"
+            },
+            {
+              "name": "independent monetary facts and event recovery suppresses existing and delayed prepay parameters after manual escalation",
+              "status": "passed"
+            },
+            {
+              "name": "independent monetary facts and event recovery records a trusted successful query with a conflicting amount without fulfilling the order",
+              "status": "passed"
+            },
+            {
+              "name": "independent monetary facts and event recovery records exactly one receipt under twenty concurrent confirmations",
+              "status": "passed"
+            },
+            {
+              "name": "independent monetary facts and event recovery keeps late money after CLOSED and creates full refund duty without resurrection",
+              "status": "passed"
+            },
+            {
+              "name": "independent monetary facts and event recovery uses verified payment time when inbox consumption happens after the inventory deadline",
+              "status": "passed"
+            },
+            {
+              "name": "independent monetary facts and event recovery retains a second actual collection and its own refund obligation",
+              "status": "passed"
+            },
+            {
+              "name": "independent monetary facts and event recovery preserves unassociated receipts, rejects conflicting facts and prevents mutation",
+              "status": "passed"
+            },
+            {
+              "name": "independent monetary facts and event recovery serializes competing refund reservations and keeps unknown amounts reserved",
+              "status": "passed"
+            },
+            {
+              "name": "independent monetary facts and event recovery recovers channel acceptance after a lost response without a second refund",
+              "status": "passed"
+            },
+            {
+              "name": "independent monetary facts and event recovery keeps one refund effect when paused worker A returns after expired lease takeover B",
+              "status": "passed"
+            },
+            {
+              "name": "independent monetary facts and event recovery rejects a queried refund for a different original trade even when the amount matches",
+              "status": "passed"
+            },
+            {
+              "name": "independent monetary facts and event recovery converges an approved refund after failure and rejects reapproval of exhausted jobs",
+              "status": "passed"
+            },
+            {
+              "name": "independent monetary facts and event recovery never applies a refund fact belonging to another receipt",
+              "status": "passed"
+            },
+            {
+              "name": "independent monetary facts and event recovery does not acknowledge persistence when the recovery job cannot commit",
+              "status": "passed"
+            },
+            {
+              "name": "independent monetary facts and event recovery commits event and recovery job together and applies after a reconnect",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "services/api/src/jobs/queue.test.ts",
+          "tests": [
+            {
+              "name": "persistent queue on PostgreSQL enqueues atomically with the enclosing business transaction",
+              "status": "passed"
+            },
+            {
+              "name": "persistent queue on PostgreSQL uses the database clock for immediate work and preserves explicit scheduling",
+              "status": "passed"
+            },
+            {
+              "name": "persistent queue on PostgreSQL deduplicates jobs and allows only one of twenty consumers to claim",
+              "status": "passed"
+            },
+            {
+              "name": "persistent queue on PostgreSQL fences expired A after B has completed, including A's retry write",
+              "status": "passed"
+            },
+            {
+              "name": "persistent queue on PostgreSQL backs off and transfers the eighth failed attempt to a dated manual case",
+              "status": "passed"
+            },
+            {
+              "name": "persistent queue on PostgreSQL never invokes a ninth channel attempt after repeated worker death",
+              "status": "passed"
+            },
+            {
+              "name": "persistent queue on PostgreSQL event-only consumers leave channel-dispatch tasks untouched",
+              "status": "passed"
+            },
+            {
+              "name": "persistent queue on PostgreSQL survives reconnect and parks unsupported payloads instead of discarding",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "services/api/src/reconciliation/service.test.ts",
+          "tests": [
+            {
+              "name": "controlled bilateral reconciliation finds channel-only money and recovers it when no local intent or job exists",
+              "status": "passed"
+            },
+            {
+              "name": "controlled bilateral reconciliation does not record an unavailable statement as a zero-difference completed reconciliation",
+              "status": "passed"
+            },
+            {
+              "name": "controlled bilateral reconciliation rejects mixed merchant scopes before persisting any import",
+              "status": "passed"
+            },
+            {
+              "name": "controlled bilateral reconciliation reports local records that channels cannot confirm and separately reports query outage",
+              "status": "passed"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "suite": "apps-ops",
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "assertions": [
+        {
+          "file": "apps/ops/src/candidate-profile.test.ts",
+          "tests": [
+            {
+              "name": "formatCandidateProfile only formats table-planning preferences and includes budget and table sizes",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "apps/ops/src/session.test.ts",
+          "tests": [
+            {
+              "name": "async operations across session changes does not let an old mutation trigger private-data refresh after logout",
+              "status": "passed"
+            },
+            {
+              "name": "async operations across session changes rejects old responses after relogin even when a token string is reused",
+              "status": "passed"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "suite": "apps-miniapp",
+      "total": 10,
+      "passed": 10,
+      "failed": 0,
+      "skipped": 0,
+      "assertions": [
+        {
+          "file": "apps/miniapp/src/api.test.ts",
+          "tests": [
+            {
+              "name": "client identity and payment boundaries keeps a new session when an older request returns a late 401",
+              "status": "passed"
+            },
+            {
+              "name": "client identity and payment boundaries uses WeChat login on cold start and never silently binds a mock phone",
+              "status": "passed"
+            },
+            {
+              "name": "client identity and payment boundaries does not manufacture an identity when WeChat authorization fails",
+              "status": "passed"
+            },
+            {
+              "name": "client identity and payment boundaries keeps the created order but never simulates payment when real params are absent",
+              "status": "passed"
+            },
+            {
+              "name": "client identity and payment boundaries clears a rejected session but retains pending order context without replay",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "apps/miniapp/src/pages/mock-auth/client-error.test.ts",
+          "tests": [
+            {
+              "name": "formatClientError shows a Taro-style errMsg so client-side request failures are actionable",
+              "status": "passed"
+            },
+            {
+              "name": "formatClientError redacts sensitive values before showing a client error",
+              "status": "passed"
+            },
+            {
+              "name": "formatClientError keeps the fallback for unknown error shapes",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "apps/miniapp/src/pages/profile/profile-form.test.ts",
+          "tests": [
+            {
+              "name": "profile form submission returns field errors for an incomplete form",
+              "status": "passed"
+            },
+            {
+              "name": "profile form submission accepts the form defaults and normalizes list fields",
+              "status": "passed"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

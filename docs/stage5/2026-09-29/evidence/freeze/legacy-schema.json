@@ -1,0 +1,9 @@
+{
+  "sha": "2e7e012e1f58e093f5913cdaeaa400b4bb7e30a7",
+  "schema": "baseline four migrations without expanded schema or migration evidence",
+  "liveness": 200,
+  "readiness": 503,
+  "allowed": false,
+  "interpretation": "Process can start but must not receive business traffic; production deployment must honor readiness",
+  "externalRequests": 0
+}

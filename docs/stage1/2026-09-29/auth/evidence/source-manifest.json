@@ -1,0 +1,130 @@
+[
+  {
+    "path": ".env.example",
+    "sha256Base64": "sI/A2xBi8FCF0d//KK7+BBY19OXvTzxFkUwivhTzT3I="
+  },
+  {
+    "path": ".github/workflows/ci.yml",
+    "sha256Base64": "PsX05GVocFzTzYhiX5uEJwWVIUEBgIYsEy7H97NoLEY="
+  },
+  {
+    "path": ".gitignore",
+    "sha256Base64": "4jpENJ9VkJGMoRAcGUg1sUsPMUP3OPE+qYENYjaqu9o="
+  },
+  {
+    "path": "PRD.md",
+    "sha256Base64": "pU5v3ZwzlAemcECUmvzdYfO9Qd1N07NXQZYc+M9ympY="
+  },
+  {
+    "path": "README.md",
+    "sha256Base64": "RpoIg5YJ5HnjlcG1b7FFJdsWmUsajj26i4pQX8w6mmI="
+  },
+  {
+    "path": "apps/miniapp/config/index.ts",
+    "sha256Base64": "fWw3/bFKMeO1sMxnCjIiMrcZAV5ydSG3Xky4VjXOd3I="
+  },
+  {
+    "path": "apps/miniapp/package.json",
+    "sha256Base64": "1l4rR/7n6OjAkuOsMOu1ZPxyYsPDmHFK0Fa+WFWJ7j8="
+  },
+  {
+    "path": "apps/miniapp/src/api.test.ts",
+    "sha256Base64": "9W24qQ7Ylvy8paHnVDBi0dK5r+1UVbqSWUG6y0PgHsc="
+  },
+  {
+    "path": "apps/miniapp/src/api.ts",
+    "sha256Base64": "dJCRnEyr2wwKGb13dForX7MwMnsuU7pT300boVAU1Qs="
+  },
+  {
+    "path": "apps/miniapp/src/pages/mock-auth/index.tsx",
+    "sha256Base64": "t7HaDNs+GuARaFdnxE7nC/cUkO/tCl9gB51Tq84NqaY="
+  },
+  {
+    "path": "apps/miniapp/src/pages/order-detail/index.tsx",
+    "sha256Base64": "ShY/YjQucewzw78YKTBJL9jViiCQqh9sWGZ2wPRD8pI="
+  },
+  {
+    "path": "apps/ops/package.json",
+    "sha256Base64": "EUSv7+Rjk0/BGzTqeAmMTMeel6AfO4yiSP7Z12cWsJE="
+  },
+  {
+    "path": "apps/ops/src/App.tsx",
+    "sha256Base64": "WEkPZV7QPlXAhR13c1DyKu5SO9rqwRBq+CLqyvxBbvY="
+  },
+  {
+    "path": "apps/ops/src/api.ts",
+    "sha256Base64": "3MfcbcX1/R9ev2kmquirQ4Gg34SNrqRYZbVRMg+LzKQ="
+  },
+  {
+    "path": "apps/ops/src/session.test.ts",
+    "sha256Base64": "0uNOkS1ARYvD+2R6jopcrTwSAeJbOszs+pytD+mxEZo="
+  },
+  {
+    "path": "apps/ops/src/session.ts",
+    "sha256Base64": "rhzpRHxZexRFZ8A12g6jh4klRhOJAOJRKIRj75+k/iQ="
+  },
+  {
+    "path": "apps/ops/src/vite-env.d.ts",
+    "sha256Base64": "ZZlpNvuwQpFfe3SiAPzd5+QQ8ypmmxq5WXz6pLD63bU="
+  },
+  {
+    "path": "package.json",
+    "sha256Base64": "nfX3jXRYZMMvCIjK8/otUZA592yGle2Vj5R9xoq9W7c="
+  },
+  {
+    "path": "packages/shared/package.json",
+    "sha256Base64": "gYX6x8SMAyOFqf+jSLUMb3K0G/JG24BwluMUro2zByY="
+  },
+  {
+    "path": "scripts/hash-admin-password.mjs",
+    "sha256Base64": "QOb/iMmYSNoE4dYe9Pxb7V9yLm9bav3QDJH8S0hqxK0="
+  },
+  {
+    "path": "scripts/test-ci.mjs",
+    "sha256Base64": "wPv+J/9T//JHCx80C87XJORxrMiDk3gcpG8UXPd+nhw="
+  },
+  {
+    "path": "scripts/verify-release.mjs",
+    "sha256Base64": "+bJybQaru5uOwOk1ztGTCTy0bFNNJVxwQW1y8ekPgJQ="
+  },
+  {
+    "path": "services/api/package.json",
+    "sha256Base64": "1nX6PqjUT+9OP6Z15gQHG7l79vXhPBDYqEjfv40TTDk="
+  },
+  {
+    "path": "services/api/src/admin-auth.ts",
+    "sha256Base64": "Y71iPgpOttWuLjFEN4t/y8rs2RIejVhLhPNV7pxV+NY="
+  },
+  {
+    "path": "services/api/src/app.test.ts",
+    "sha256Base64": "Ub1tjPycLL1opngrmemhAdULKAus5j/afOasPapab6Q="
+  },
+  {
+    "path": "services/api/src/app.ts",
+    "sha256Base64": "bHE6x6a+1iCOGaZtb/X9FKiI+acSR9/FOghdDXR2chc="
+  },
+  {
+    "path": "services/api/src/auth.test.ts",
+    "sha256Base64": "Np5hAENRAIdX56Qb0TX3g+15AktHbFVd0MmqFpflC9M="
+  },
+  {
+    "path": "services/api/src/auth.ts",
+    "sha256Base64": "/SkiF2OmAN5jZnQKmZxArwZ+c5zmq3qfGcdeAKMyHaI="
+  },
+  {
+    "path": "services/api/src/config.test.ts",
+    "sha256Base64": "IkV2kCLKLOg0lBDdj9eP78/d31GaRB8lTw9t4K+emDI="
+  },
+  {
+    "path": "services/api/src/config.ts",
+    "sha256Base64": "368OxOEl53ztlcCBGzXy3710zz4JhjJ30MGUR25sdBU="
+  },
+  {
+    "path": "services/api/src/probe-state-machine.ts",
+    "sha256Base64": "3VPv3PSq7YRQryQNwNbHAFatHe4og9AWjCd32qNIEdg="
+  },
+  {
+    "path": "services/api/src/security.test.ts",
+    "sha256Base64": "GmbTPofc2lTISqsDsiuxXkD2Oz25QsK906dN1MgydUs="
+  }
+]

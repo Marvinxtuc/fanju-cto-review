@@ -1,0 +1,68 @@
+{
+  "sha": "2e7e012e1f58e093f5913cdaeaa400b4bb7e30a7",
+  "sourceSnapshotFiles": 124,
+  "sourceMismatches": [],
+  "archive": "/tmp/fanju-freeze-2e7e012-20260930",
+  "package": "/tmp/fanju-freeze-api-release-2e7e012",
+  "tests": [
+    {
+      "project": "apps-miniapp",
+      "passed": 21,
+      "failed": 0,
+      "pending": 0
+    },
+    {
+      "project": "apps-ops",
+      "passed": 3,
+      "failed": 0,
+      "pending": 0
+    },
+    {
+      "project": "packages-shared",
+      "passed": 18,
+      "failed": 0,
+      "pending": 0
+    },
+    {
+      "project": "services-api",
+      "passed": 145,
+      "failed": 0,
+      "pending": 0
+    }
+  ],
+  "passed": 187,
+  "migrationCount": 13,
+  "historyMigration": {
+    "historicalRowsPreserved": 3,
+    "replacementRows": 1,
+    "duplicateBlocked": true,
+    "paidWithoutCapacityBlocked": true
+  },
+  "build": "real Vite/Taro/API from clean archive",
+  "typecheck": "passed",
+  "releaseSmoke": "passed with explicit local non-demo session environment",
+  "initialReleaseSmoke": "failed without required session configuration; no code change needed",
+  "artifacts": 254,
+  "artifactManifestSha256": "b4256bfdceaccd92275d22da08a2b2b3944213ba5c2d60117589a9ab39389844",
+  "previousOnlyArtifacts": [
+    "apps/miniapp/dist/project.config.json",
+    "apps/miniapp/dist/project.private.config.json"
+  ],
+  "newOnlyArtifacts": [],
+  "logs": [
+    "/tmp/fanju-freeze-install.log",
+    "/tmp/fanju-freeze-legacy-schema.log",
+    "/tmp/fanju-freeze-release-retry.log",
+    "/tmp/fanju-freeze-archive-install.log",
+    "/tmp/fanju-freeze-migrate.log",
+    "/tmp/fanju-freeze-deploy.log",
+    "/tmp/fanju-freeze-ci.log",
+    "/tmp/fanju-freeze-build.log",
+    "/tmp/fanju-freeze-history.log",
+    "/tmp/fanju-freeze-reinstall.log",
+    "/tmp/fanju-freeze-secrets.log",
+    "/tmp/fanju-freeze-release.log",
+    "/tmp/fanju-freeze-typecheck.log"
+  ],
+  "realNetwork": false
+}

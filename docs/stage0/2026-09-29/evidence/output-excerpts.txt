@@ -1,0 +1,66 @@
+## api-deploy-bundle.log
+ WARN  2 deprecated subdependencies found: glob@10.5.0, whatwg-encoding@3.1.1
+ WARN  Failed to create bin at /Users/marvin.x/tmp/fanju-stage0-20260929/api-release/node_modules/.bin/tsserver. ENOENT: no such file or directory, open '/tmp/fanju-stage0-20260929/api-release/node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/bin/tsserver'
+ WARN  Failed to create bin at /Users/marvin.x/tmp/fanju-stage0-20260929/api-release/node_modules/.bin/tsc. ENOENT: no such file or directory, open '/tmp/fanju-stage0-20260929/api-release/node_modules/.pnpm/typescript@6.0.3/node_modules/typescript/bin/tsc'
+ WARN  Issues with peer dependencies found
+    ├── ✕ unmet peer @types/react@18.3.31: found 19.2.17
+      ├── ✕ unmet peer @types/react@18.3.31: found 19.2.17
+      │ ├── ✕ unmet peer @types/react@18.3.31: found 19.2.17
+      │   ├── ✕ unmet peer @types/react@18.3.31: found 19.2.17
+      │     └── ✕ unmet peer @types/react@18.3.31: found 19.2.17
+        ├── ✕ unmet peer @types/react@18.3.31: found 19.2.17
+          ├── ✕ unmet peer @types/react@18.3.31: found 19.2.17
+            └── ✕ unmet peer @types/react@18.3.31: found 19.2.17
+
+## db-generate.log
+✔ Generated Prisma Client (7.8.0) to ./services/api/src/generated/prisma in 59ms
+
+## db-validate.log
+The schema at prisma/schema.prisma is valid 🚀
+
+## existing-build.log
+✔ Generated Prisma Client (7.8.0) to ./services/api/src/generated/prisma in 62ms
+
+## migrate-deploy.log
+Applying migration `20260624000000_initial`
+Applying migration `20260717000000_wechat_pay_channel_references`
+Applying migration `20260720000000_user_profile_table_sizes`
+Applying migration `20260720001000_reviews`
+All migrations have been successfully applied.
+
+## ops-build.log
+✓ built in 1.22s
+
+## state-probe.log
+state-machine probe passed
+
+## tests-after-build.log
+✔ Generated Prisma Client (7.8.0) to ./services/api/src/generated/prisma in 62ms
+apps/ops test:  Test Files  1 passed (1)
+apps/ops test:       Tests  1 passed (1)
+apps/miniapp test:  Test Files  2 passed (2)
+apps/miniapp test:       Tests  5 passed (5)
+packages/shared test:  Test Files  1 passed (1)
+packages/shared test:       Tests  18 passed (18)
+services/api test:  ✓ src/app.test.ts (27 tests) 1575ms
+services/api test:  Test Files  3 passed (3)
+services/api test:       Tests  43 passed (43)
+
+## tests-db-enabled.log
+✔ Generated Prisma Client (7.8.0) to ./services/api/src/generated/prisma in 63ms
+apps/ops test:  Test Files  1 passed (1)
+apps/ops test:       Tests  1 passed (1)
+apps/miniapp test:  Test Files  2 passed (2)
+apps/miniapp test:       Tests  5 passed (5)
+packages/shared test:  Test Files  1 passed (1)
+packages/shared test:       Tests  18 passed (18)
+services/api test:  ❯ src/app.test.ts (0 test)
+services/api test: Error: Failed to resolve entry for package "@timeleft-shanghai/shared". The package may have incorrect main/module/exports specified in its package.json.
+services/api test:  Test Files  1 failed | 2 passed (3)
+services/api test:       Tests  16 passed (16)
+
+## typecheck.log
+✔ Generated Prisma Client (7.8.0) to ./services/api/src/generated/prisma in 75ms
+
+## weapp-build.log
+  Compiled successfully in 1.86s

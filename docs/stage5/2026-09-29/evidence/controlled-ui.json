@@ -1,0 +1,44 @@
+{
+  "scope": "disposable controlled local UI",
+  "activity": [
+    {
+      "id": "cmunh6ozw000463nvcxbvb9ra",
+      "status": "COMPLETED"
+    }
+  ],
+  "orders": [
+    {
+      "status": "REFUNDED",
+      "count": "1"
+    },
+    {
+      "status": "COMPLETED",
+      "count": "4"
+    }
+  ],
+  "case": [
+    {
+      "id": "controlled_ui_case_20260930",
+      "state": "RESOLVED",
+      "owner": "cmunh5zf9000063nvcgtsr28b",
+      "reviewedBy": "cmunh7il2000963nvzsfxs2y8",
+      "resolution": "refund:cmungv1qv001v0tnvjg99wft8"
+    }
+  ],
+  "feedback": [
+    {
+      "status": "RESOLVED"
+    }
+  ],
+  "user": [
+    {
+      "status": "NORMAL"
+    }
+  ],
+  "notificationPages": [
+    {
+      "status": "SENT",
+      "count": "25"
+    }
+  ]
+}

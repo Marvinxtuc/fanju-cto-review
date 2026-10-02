@@ -1,0 +1,94 @@
+[
+  {
+    "project": "services-api",
+    "total": 46,
+    "passed": 46,
+    "failed": 0,
+    "pending": 0,
+    "suites": [
+      {
+        "file": "app.test.ts",
+        "tests": 27,
+        "statuses": [
+          "passed"
+        ]
+      },
+      {
+        "file": "providers.test.ts",
+        "tests": 13,
+        "statuses": [
+          "passed"
+        ]
+      },
+      {
+        "file": "security.test.ts",
+        "tests": 3,
+        "statuses": [
+          "passed"
+        ]
+      },
+      {
+        "file": "wechat-pay.test.ts",
+        "tests": 3,
+        "statuses": [
+          "passed"
+        ]
+      }
+    ]
+  },
+  {
+    "project": "packages-shared",
+    "total": 18,
+    "passed": 18,
+    "failed": 0,
+    "pending": 0,
+    "suites": [
+      {
+        "file": "shared.test.ts",
+        "tests": 18,
+        "statuses": [
+          "passed"
+        ]
+      }
+    ]
+  },
+  {
+    "project": "apps-ops",
+    "total": 1,
+    "passed": 1,
+    "failed": 0,
+    "pending": 0,
+    "suites": [
+      {
+        "file": "candidate-profile.test.ts",
+        "tests": 1,
+        "statuses": [
+          "passed"
+        ]
+      }
+    ]
+  },
+  {
+    "project": "apps-miniapp",
+    "total": 5,
+    "passed": 5,
+    "failed": 0,
+    "pending": 0,
+    "suites": [
+      {
+        "file": "client-error.test.ts",
+        "tests": 3,
+        "statuses": [
+          "passed"
+        ]
+      },
+      {
+        "file": "profile-form.test.ts",
+        "tests": 2,
+        "statuses": [
+          "passed"
+        ]
+      }
+    ]
+  }
+]

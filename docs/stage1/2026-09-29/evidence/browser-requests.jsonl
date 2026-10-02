@@ -1,0 +1,17 @@
+{"method": "POST", "path": "/api/mock/admin-login", "status": 200}
+{"method": "GET", "path": "/api/ops/activities", "status": 200}
+{"method": "GET", "path": "/api/ops/reports", "status": 200}
+{"method": "GET", "path": "/api/ops/reviews", "status": 200}
+{"method": "GET", "path": "/api/ops/orders", "status": 200}
+{"method": "GET", "path": "/api/ops/refunds", "status": 200}
+{"method": "GET", "path": "/api/ops/restaurants", "status": 200}
+{"method": "GET", "path": "/api/ops/blacklist", "status": 200}
+{"method": "GET", "path": "/api/ops/audit-logs", "status": 200}
+{"method": "GET", "path": "/api/ops/restaurants", "status": 200}
+{"method": "GET", "path": "/api/ops/activities", "status": 200}
+{"method": "GET", "path": "/api/ops/refunds", "status": 200}
+{"method": "GET", "path": "/api/ops/orders", "status": 200}
+{"method": "GET", "path": "/api/ops/reviews", "status": 200}
+{"method": "GET", "path": "/api/ops/reports", "status": 200}
+{"method": "GET", "path": "/api/ops/blacklist", "status": 200}
+{"method": "GET", "path": "/api/ops/audit-logs", "status": 200}

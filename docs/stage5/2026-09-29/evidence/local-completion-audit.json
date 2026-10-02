@@ -1,0 +1,39 @@
+{
+  "capturedAt": "2026-09-30T02:50:24.520265+00:00",
+  "head": "bc25f5b4859623338829ec09278c72619392141c",
+  "branch": "codex/fanju-stage0-baseline",
+  "completion": "incomplete",
+  "ciRecorded": {
+    "passed": 187,
+    "failed": 0,
+    "pending": 0
+  },
+  "scenarioHeadings": 38,
+  "indexedAssertions": 96,
+  "unmatchedAssertions": [],
+  "manifestChecks": [
+    {
+      "manifest": "docs/stage5/2026-09-29/evidence/ui-action-manifest.json",
+      "total": 5,
+      "matched": 5,
+      "mismatches": []
+    },
+    {
+      "manifest": "artifacts/release-manifest.json",
+      "total": 256,
+      "matched": 256,
+      "mismatches": []
+    }
+  ],
+  "sourceSnapshot": {
+    "files": 124,
+    "sha256": "5a52e2ac05e0d8e917eb4914eca7ae117587f8255980aa2f8b36fdcf2f86ddb8",
+    "scope": "Current local source/configuration inputs; not a committed release SHA or proof of fresh build"
+  },
+  "outstanding": [
+    "Local Git freeze authorization pending; exact compatible rollback SHA and version rehearsal missing",
+    "Formal rules, named gate signoff and external platform/environment inputs missing",
+    "Real integration, production migration/deployment and charging not authorized"
+  ],
+  "lint": "No configured lint command; not claimed passed"
+}

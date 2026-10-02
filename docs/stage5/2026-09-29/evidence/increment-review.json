@@ -1,0 +1,19 @@
+{
+  "scope": "latest miniapp request normalization and two API assertion extensions",
+  "command": "codex review <scoped increment prompt>",
+  "exitCode": 0,
+  "actionableFindings": [],
+  "fullWorktreeAttempts": [
+    {
+      "exitCode": 143,
+      "log": "/tmp/fanju-n1p1-ui-action-review.log"
+    },
+    {
+      "exitCode": 143,
+      "log": "/tmp/fanju-n1p1-ui-action-review-retry.log"
+    }
+  ],
+  "log": "/tmp/fanju-acceptance-increment-review.log",
+  "ci": "ui-action-ci.json",
+  "limitations": "No new complete whole-worktree conclusion. Earlier 186-test version has its own recorded complete review."
+}

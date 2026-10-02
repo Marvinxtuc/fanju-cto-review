@@ -1,0 +1,126 @@
+{
+  "document_id": "FJ-BUNDLE-MANIFEST-V1.1-20261001-REBASE-01",
+  "generated_at": "2026-10-01",
+  "bundle_payload": {
+    "bundle_id": "FJ-POLICY-V1.1-20261001-REBASE-01",
+    "bundle_version": "V1.1",
+    "document_status": "REBASED_DRAFT",
+    "documents": [
+      {
+        "path": "docs/policy/BUSINESS_RULES_BASELINE.md",
+        "document_id": "FJ-BUSINESS-BASELINE-20261001-V1.1",
+        "document_version": "V1.1",
+        "sha256": "38f06f87684d2aee70dd8853391085af22da399cbdd5e2771b26ba54925376ec"
+      },
+      {
+        "path": "docs/policy/OPEN_DECISION_REVIEW.md",
+        "document_id": null,
+        "document_version": "V1.1",
+        "sha256": "7e1b177698826d117a64c8d2de7552db287e79bde32f998150786d648a422965"
+      },
+      {
+        "path": "docs/policy/POLICY_IMPLEMENTATION_AND_ACCEPTANCE.md",
+        "document_id": "FJ-IA-V1.1-20261001-REBASE-01",
+        "document_version": "V1.1",
+        "sha256": "41ca1f220f61ec8ddbb83ce8809be088a8944787e0276c6742f6044f1b654505"
+      },
+      {
+        "path": "docs/policy/POLICY_REBASE_V1_1_CHANGELOG.md",
+        "document_id": null,
+        "document_version": "V1.1",
+        "sha256": "0548ac0a7d9472326e475990e75de64ecaf5423b09672f9764a5c73044f1d7aa"
+      },
+      {
+        "path": "docs/policy/POLICY_TECH_DESIGN.md",
+        "document_id": null,
+        "document_version": "V1.1",
+        "sha256": "899b43dcae7d519810c1f73520c49df311aec82dc533ff5339c941f29ce0e002"
+      },
+      {
+        "path": "docs/policy/POLICY_V1_1_CONSISTENCY_REPORT.md",
+        "document_id": null,
+        "document_version": "V1.1",
+        "sha256": "9f0e0a0b57c23676ffa34433e13bd327132d7bd096f0e4670ad427c68346c058"
+      },
+      {
+        "path": "docs/policy/POLICY_WORK_PACKAGES.md",
+        "document_id": null,
+        "document_version": "V1.1",
+        "sha256": "fb5ec4dde5b44c89a3c0cccc40002508e03955296ee8270ba15c36194c854b09"
+      },
+      {
+        "path": "docs/policy/PRIVACY_NOTICE.md",
+        "document_id": "FJ-PN-V1.1-20261001-REBASE-01",
+        "document_version": "V1.1",
+        "sha256": "2d7a4b00404a07fed3b27f2526718224b58c3ec5e4027146ee4e8e8847ec7b40"
+      },
+      {
+        "path": "docs/policy/README.md",
+        "document_id": null,
+        "document_version": "V1.1",
+        "sha256": "f85c36facadfeb527661fd22b1be03013a0237f81355facc321204979d7e4516"
+      },
+      {
+        "path": "docs/policy/REFUND_POLICY.md",
+        "document_id": "FJ-RF-V1.1-20261001-REBASE-01",
+        "document_version": "V1.1",
+        "sha256": "c5b1207fde76a3d853df4eaac56b58ca8bdad5e2f20cb3f0d539071b7c4003d7"
+      },
+      {
+        "path": "docs/policy/RESTAURANT_SERVICE_STANDARD.md",
+        "document_id": "FJ-RS-V1.1-20261001-REBASE-01",
+        "document_version": "V1.1",
+        "sha256": "9b7b679f0669e08cdcaa5a1b0a6ac882534592da17fca3e7136f3d1a3eec1761"
+      },
+      {
+        "path": "docs/policy/TRACEABILITY_INDEX.json",
+        "document_id": null,
+        "document_version": "V1.1",
+        "sha256": "5b60aecc60afd049a48be1630726277bb25254741b7e1bb01d384450941073f0"
+      },
+      {
+        "path": "docs/policy/USER_AGREEMENT.md",
+        "document_id": "FJ-UA-V1.1-20261001-REBASE-01",
+        "document_version": "V1.1",
+        "sha256": "68c4823f2650ccd6afb7ad722c9235043c89d965aeadcd8f8218c04e451ddbc2"
+      },
+      {
+        "path": "docs/policy/sources/FJ_DR01_DR02_DECISION_FREEZE_V1_1_INPUT.md",
+        "document_id": "FJ-DR01-DR02-DECISIONS-20261001-V1",
+        "document_version": "V1",
+        "sha256": "0268f125663f3a31f9ebb0c8c49870bb2f3df9d47776e2c54439f162b1508743"
+      }
+    ]
+  },
+  "bundle_sha256": "1fcd70ea51b9776f819c9c9ada9e1611408a57b79ced56325226f8d5ae58f1a0",
+  "digest_algorithm": "SHA-256",
+  "document_digest_scope": "FULL FILE BYTES; no normalization",
+  "bundle_digest_scope": "UTF-8 json.dumps(bundle_payload, ensure_ascii=False, sort_keys=True, separators=(comma,colon)); no trailing newline",
+  "self_reference_exclusions": [
+    "docs/policy/POLICY_V1_1_BUNDLE_MANIFEST.json",
+    "docs/policy/SHA256SUMS_V1_1.txt"
+  ],
+  "document_identity_note": "Null document_id means auxiliary evidence has no separate declared control ID. Path identifies it. The preserved upstream V1 is a business input, not a mixed V1.0 policy.",
+  "eligibility": "NOT_ACTIVATABLE",
+  "effective_date": null,
+  "business_input_status": "APPROVED_AS_BUSINESS_INPUT",
+  "policy_approval_status": "REBASED_DRAFT_REQUIRES_HUMAN_REVIEW",
+  "runtime_configuration": false,
+  "op_status_counts": {
+    "CLOSED": 3,
+    "PARTIALLY_CLOSED": 4,
+    "OPEN": 8
+  },
+  "special_review_statuses": {
+    "RV-01": "REVIEW_REQUIRED",
+    "RV-02": "REVIEW_REQUIRED",
+    "RV-03": "REVIEW_REQUIRED",
+    "RV-04": "REVIEW_REQUIRED",
+    "RV-05": "REVIEW_REQUIRED",
+    "RV-06": "REVIEW_REQUIRED",
+    "RV-07": "REVIEW_REQUIRED"
+  },
+  "business_tests_executed": 0,
+  "historical_v1_0_validator": "UNCHANGED; no activation or old test/Gate inheritance",
+  "starting_and_ending_head": "003200820922d11b374b84a9e756d4d763bea3f2"
+}

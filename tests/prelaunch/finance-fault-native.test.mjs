@@ -1,0 +1,48 @@
+import {syntheticConsentDocuments,syntheticConsentHashes} from './fixtures/synthetic-consent.mjs';
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { randomUUID } from 'node:crypto';
+import { createRequire } from 'node:module';
+import { pathToFileURL } from 'node:url';
+const repo=process.env.PRELAUNCH_SOURCE_ROOT;
+if(!repo)throw Error('Explicit owned source root required');
+const require=createRequire(`${repo}/services/api/package.json`);
+const {PrismaPg}=require('@prisma/adapter-pg');
+const {PrismaClient}=await import(pathToFileURL(`${repo}/services/api/dist/generated/prisma/client.js`));
+const domain=await import(pathToFileURL(`${repo}/services/api/dist/prelaunch/domain.js`));
+const {verifyOwnedDatabase}=await import(pathToFileURL(`${repo}/services/api/dist/prelaunch/ownership.js`));
+const {PersistentMockChannel}=await import(pathToFileURL(`${repo}/services/api/dist/funding/mock-channel.js`));
+const db=new PrismaClient({adapter:new PrismaPg({connectionString:process.env.DATABASE_URL})});
+const channelDb=new PrismaClient({adapter:new PrismaPg({connectionString:process.env.PRELAUNCH_CHANNEL_DATABASE_URL})});
+await verifyOwnedDatabase(db,process.env);await verifyOwnedDatabase(channelDb,{...process.env,PRELAUNCH_DATABASE_NAME:process.env.PRELAUNCH_CHANNEL_DATABASE_NAME});
+const channel=new PersistentMockChannel(channelDb);
+const prefix=`money-${randomUUID()}`;
+let sequence=0;
+async function fixture(){
+ const restaurant=await db.restaurant.create({data:{name:'合成测试餐厅',district:'上海测试区域',businessArea:'TEST_ONLY',address:'合成地址',contactName:'TEST_ONLY',contactPhone:'synthetic-local',budgetCents:1,cuisineTags:[],capacity:4}});
+ const now=await db.$transaction(domain.dbNow);
+ const activity=await db.activity.create({data:{restaurantId:restaurant.id,title:'合成兴趣体验',theme:'TEST_ONLY',description:'TEST_ONLY',district:'上海测试区域',businessArea:'TEST_ONLY',startsAt:new Date(now.getTime()+72*3600_000),endsAt:new Date(now.getTime()+74*3600_000),registrationEndsAt:new Date(now.getTime()+64*3600_000),serviceFeeCents:0,mealFeePolicyText:'餐费到店自理',capacity:4,status:'PUBLISHED'}});
+ const policy=await db.v11PolicySnapshot.create({data:{bundleVersion:'SIMULATION_ONLY:'+prefix, bundleDigest:prefix+sequence++,baselineHash:'synthetic-only',status:'LOCAL_DRAFT',docsJson:{scope:'TEST_ONLY',documents:syntheticConsentDocuments()},blockersJson:['OP-05']}});
+ const supply=await db.v11SupplyRevision.create({data:{activityId:activity.id,restaurantId:restaurant.id,policyId:policy.id,revision:1,minSize:4,targetSize:4,maxSize:4,maxTables:1,capacity:4,serviceFeeCents:100,depositCents:200,waitlistMax:4,strategy:'FILL_TO_MAX',snapshot:{scope:'TEST_ONLY',explicitSyntheticAmounts:true},digest:prefix+sequence++,status:'SIMULATION_APPROVED'}});
+ return {activity,supply,policy};
+}
+async function actor(f){const user=await db.user.create({data:{wechatOpenid:prefix+sequence++,phone:'synthetic-authorized'}});await db.v11Profile.create({data:{userId:user.id,gender:'MALE',adultConfirmed:true,adaptationConfirmed:true}});const consent=await db.v11BundleConsent.create({data:{userId:user.id,policyId:f.policy.id,...syntheticConsentHashes(),acceptedAt:await db.$transaction(domain.dbNow)}});return{actor:{id:prefix+sequence++,personId:prefix+sequence++,role:'USER',userId:user.id,restaurantId:null,version:0},consent};}
+async function registration(f,membership){const a=await actor(f);const reg=await domain.createRegistration(db,a.actor,{activityId:f.activity.id,supplyId:f.supply.id,policyId:f.policy.id,consentId:a.consent.id,membership,businessKey:prefix+sequence++});assert.ok('eligibilityState'in reg);return{reg,actor:a.actor};}
+async function pay(r){const intent=await domain.startPayment(db,r.actor,r.reg.id);const fact=await channel.pay(intent.merchantOrderNo,intent.totalCents);await domain.persistMockEvent(db,{kind:'PAYMENT',sourceId:intent.id,channelNo:fact.channelNo,amountCents:fact.amountCents});return{intent,fact};}
+test.after(async()=>{await Promise.all([db.$disconnect(),channelDb.$disconnect()]);});
+const {enqueue,claimJob}=await import(pathToFileURL(`${repo}/services/api/dist/jobs/queue.js`));
+async function ownClaim(job){const rows=await db.$queryRaw`UPDATE "DurableJob" SET "state"='RUNNING',"leaseOwner"=${prefix},"leaseUntil"=clock_timestamp()+interval '30 seconds',"generation"="generation"+1,"attempts"="attempts"+1,"updatedAt"=clock_timestamp() WHERE id=${job.id} AND ("state" IN ('READY','RETRY') OR ("state"='RUNNING' AND "leaseUntil"<=clock_timestamp())) RETURNING *`;assert.equal(rows.length,1);return rows[0];}
+async function leaseJob(kind,refId){const job=await db.$transaction(tx=>enqueue(tx,kind,`${prefix}:job:${sequence++}`,refId));return ownClaim(job);}
+test('PRE013: native orphan trusted payment and refund events persist MANUAL cases without qualification',async()=>{
+ for(const kind of ['PAYMENT','REFUND']){const event=await domain.persistMockEvent(db,{kind,sourceId:prefix+sequence++,channelNo:prefix+sequence++,amountCents:300,...(kind==='REFUND'?{originalTradeNo:prefix+sequence++}:{})});assert.equal(event.state,'MANUAL');assert.ok(await db.receivedEvent.findUnique({where:{id:event.id}}));assert.ok(await db.financialCase.findFirst({where:{category:`V11_ORPHAN_${kind}_EVENT`,sourceRef:event.id}}));assert.equal(await db.channelReceipt.count({where:{channelTradeNo:event.normalizedPayload.channelNo}}),0);}
+});
+async function moneyFixture(kind){const f=await fixture();const r=await registration(f,'FORMAL');if(kind==='PAYMENT'){const row=await domain.startPayment(db,r.actor,r.reg.id);return{f,r,row,job:await leaseJob('V11_PAY',row.id)}}const paid=await pay(r);const bind=await db.v11ReceiptBinding.findFirstOrThrow({where:{registrationId:r.reg.id}});const row=await db.$transaction(async tx=>domain.reserveRefund(tx,await domain.registrationLock(tx,r.reg.id),bind.receiptId,{F:100,D:200},prefix+sequence++));return{f,r,row,job:await leaseJob('V11_REFUND',row.id)}}
+for(const kind of ['PAYMENT','REFUND'])test(`PRE009: native ${kind} accepted channel timeout persists UNKNOWN then queries one original fact to CONFIRMED`,async()=>{
+ const f=await moneyFixture(kind);const handler=kind==='PAYMENT'?'V11_PAY':'V11_REFUND';const table=kind==='PAYMENT'?db.v11PaymentIntent:db.v11RefundInstruction;const key=kind==='PAYMENT'?f.row.merchantOrderNo:f.row.merchantRefundNo;await assert.rejects(domain.recoveryHandlers(db,channel,async()=>{throw Error('synthetic-timeout')})[handler](f.job),/synthetic-timeout/);assert.equal((await table.findUniqueOrThrow({where:{id:f.row.id}})).state,'UNKNOWN');assert.equal(await channelDb.mockChannelTransaction.count({where:{businessKey:`${kind}:${key}`}}),1);await domain.recoveryHandlers(db,channel)[handler](f.job);assert.equal((await table.findUniqueOrThrow({where:{id:f.row.id}})).state,'CONFIRMED');assert.equal(await channelDb.mockChannelTransaction.count({where:{businessKey:`${kind}:${key}`}}),1);
+});
+for(const kind of ['PAYMENT','REFUND'])test(`PRE010: native ${kind} callback success before original timeout remains CONFIRMED and keeps one effect`,async()=>{
+ const f=await moneyFixture(kind);const handler=kind==='PAYMENT'?'V11_PAY':'V11_REFUND';const table=kind==='PAYMENT'?db.v11PaymentIntent:db.v11RefundInstruction;const key=kind==='PAYMENT'?f.row.merchantOrderNo:f.row.merchantRefundNo;await assert.rejects(domain.recoveryHandlers(db,channel,async()=>{const fact=await channel.query(kind,key);await domain.persistMockEvent(db,{kind,sourceId:f.row.id,channelNo:fact.channelNo,amountCents:fact.amountCents,...(kind==='REFUND'?{originalTradeNo:f.row.originalTradeNo}:{})});throw Error('synthetic-after-callback-timeout')})[handler](f.job),/synthetic-after-callback-timeout/);assert.equal((await table.findUniqueOrThrow({where:{id:f.row.id}})).state,'CONFIRMED');await domain.recoveryHandlers(db,channel)[handler](f.job);assert.equal(await channelDb.mockChannelTransaction.count({where:{businessKey:`${kind}:${key}`}}),1);if(kind==='PAYMENT')assert.equal(await db.v11ReceiptBinding.count({where:{intentId:f.row.id}}),1);else assert.equal(await db.v11Disposition.count({where:{sourceRef:f.row.id,state:'COMPLETED'}}),2);
+});
+test('PRE044: native event transaction fails before ACK and rolls back all effects then repeated persistence commits once',async()=>{
+ const f=await fixture();const r=await registration(f,'FORMAL');const intent=await domain.startPayment(db,r.actor,r.reg.id);const fact=await channel.pay(intent.merchantOrderNo,intent.totalCents);const input={kind:'PAYMENT',sourceId:intent.id,channelNo:fact.channelNo,amountCents:fact.amountCents};const failingDb=new Proxy(db,{get(target,key){if(key==='$transaction')return callback=>target.$transaction(async tx=>{await callback(tx);throw Error('synthetic-db-commit-failure')});const value=Reflect.get(target,key);return typeof value==='function'?value.bind(target):value}});await assert.rejects(domain.persistMockEvent(failingDb,input),/synthetic-db-commit-failure/);assert.equal(await db.receivedEvent.count({where:{eventKey:`PAYMENT:${fact.channelNo}`}}),0);assert.equal(await db.channelReceipt.count({where:{channelTradeNo:fact.channelNo}}),0);assert.equal(await db.v11Membership.count({where:{registrationId:r.reg.id}}),0);assert.equal((await db.v11PaymentIntent.findUniqueOrThrow({where:{id:intent.id}})).state,'NEW');const first=await domain.persistMockEvent(db,input);const second=await domain.persistMockEvent(db,input);assert.equal(first.id,second.id);assert.equal(first.state,'APPLIED');assert.equal(await db.v11ReceiptBinding.count({where:{intentId:intent.id}}),1);assert.equal(await db.v11Membership.count({where:{registrationId:r.reg.id}}),1);
+});

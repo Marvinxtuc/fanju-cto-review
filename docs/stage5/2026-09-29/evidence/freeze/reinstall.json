@@ -1,0 +1,19 @@
+{
+  "sha": "2e7e012e1f58e093f5913cdaeaa400b4bb7e30a7",
+  "database": "fanju_freeze_2e7e012_20260930",
+  "migrationCount": 13,
+  "operation": "Stop and reinstall exact frozen compatible API baseline; independent packaged worker consumes persisted event during downtime",
+  "crossVersionRollback": false,
+  "ordersBefore": 2,
+  "ordersAfter": 2,
+  "orderIds": [
+    "freeze_2e7e012_reinstall_active",
+    "freeze_2e7e012_reinstall_old"
+  ],
+  "receiptId": "cmunqwovt00002tnvapfs6o9y",
+  "receiptCount": 1,
+  "jobState": "DONE",
+  "workerExit": 0,
+  "APIStops": "SIGTERM exit 0 twice",
+  "externalRequests": 0
+}

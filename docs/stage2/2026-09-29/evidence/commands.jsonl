@@ -1,0 +1,15 @@
+{"label": "full-tests", "command": ["pnpm", "test:ci"], "exit": 0, "seconds": 6.7}
+{"label": "build", "command": ["pnpm", "build"], "exit": 0, "seconds": 7.53}
+{"label": "copy", "command": ["pnpm", "check:copy"], "exit": 0, "seconds": 0.47}
+{"label": "secrets", "command": ["pnpm", "check:secrets"], "exit": 0, "seconds": 0.47}
+{"label": "probe", "command": ["pnpm", "probe:api:state-machine"], "exit": 1, "seconds": 12.74}
+{"label": "probe-fixed", "command": ["pnpm", "probe:api:state-machine"], "exit": 0, "seconds": 3.06}
+{"label": "typecheck", "command": ["pnpm", "typecheck"], "exit": 0, "seconds": 3.97}
+{"label": "review-fixes-tests", "command": ["pnpm", "test:ci"], "exit": 0, "seconds": 6.78}
+{"label": "final-build", "command": ["pnpm", "build"], "exit": 0, "seconds": 7.69}
+{"label": "final-tests", "command": ["pnpm", "test:ci"], "exit": 0, "seconds": 14.49}
+{"label": "clean-install", "command": ["pnpm", "install", "--frozen-lockfile"], "exit": 0, "seconds": 3.67}
+{"label": "clean-build", "command": ["pnpm", "build"], "exit": 0, "seconds": 10.89}
+{"label": "final-typecheck", "command": ["pnpm", "typecheck"], "exit": 0, "seconds": 4.11}
+{"label": "clean-deploy", "command": ["pnpm", "--filter", "@timeleft-shanghai/api", "deploy", "--prod", "/tmp/fanju-stage2-20260929/api-release"], "exit": 0, "seconds": 5.87}
+{"label": "release", "command": ["pnpm", "verify:release", "/tmp/fanju-stage2-20260929/api-release"], "exit": 0, "seconds": 0.95}

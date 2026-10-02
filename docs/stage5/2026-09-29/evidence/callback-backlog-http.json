@@ -1,0 +1,17 @@
+{
+  "capturedAt": "2026-09-30T02:48:17.801Z",
+  "eventKey": "local_backlog_0b50f7ad-89e4-476d-bca0-b48dc2a8a065",
+  "eventId": "cmuni9wl70000dtnvq1zxdy0l",
+  "firstAck": 200,
+  "expiredReplayStatus": 500,
+  "rawBody": "pretty JSON plus trailing newline; signed exact bytes",
+  "backlogFixture": "verifiedAt aged one hour in disposable DB; verifier clock advanced one hour for HTTP replay",
+  "workerExit": 0,
+  "eventState": "MANUAL",
+  "jobStatus": "DONE",
+  "receiptCount": 1,
+  "receiptId": "cmuni9wqv0000e1nvd6ja0h2i",
+  "externalRequests": 0,
+  "association": "unknown local trade retained for manual follow-up",
+  "entryProxy": "direct loopback HTTP only; production proxy unverified"
+}

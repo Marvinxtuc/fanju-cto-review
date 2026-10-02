@@ -1,0 +1,974 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../services/api/src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserStatus {
+  NORMAL
+  RESTRICTED
+  BLACKLISTED
+}
+
+enum AdminRole {
+  OPS
+  SUPER_ADMIN
+}
+
+enum RestaurantStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ActivityStatus {
+  DRAFT
+  PUBLISHED
+  REGISTRATION_OPEN
+  LOCKING
+  GROUPED
+  GROUP_FAILED
+  ADDRESS_UNLOCKED
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAYMENT_FAILED
+  CLOSED
+  PAID_PENDING_GROUP
+  GROUPED
+  GROUP_FAILED
+  REFUND_REQUESTED
+  REFUND_REVIEWING
+  REFUNDING
+  REFUNDED
+  CANCELED
+  COMPLETED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+}
+
+enum RefundStatus {
+  REVIEWING
+  REFUNDING
+  SUCCEEDED
+  FAILED
+  REJECTED
+}
+
+enum TableGroupStatus {
+  PENDING_CONFIRMATION
+  CONFIRMED
+  CANCELED
+}
+
+enum ReportStatus {
+  OPEN
+  RESOLVED
+  REJECTED
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+model User {
+  id             String          @id @default(cuid())
+  wechatOpenid   String          @unique
+  wechatUnionid  String?
+  phone          String?
+  status         UserStatus      @default(NORMAL)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  profile        UserProfile?
+  consents       ConsentRecord[]
+  orders         Order[]
+  reviews        Review[]
+  reports        Report[]
+  blacklistEntry Blacklist?
+  notifications  Notification[]
+  v11Actor_userId V11Actor[] @relation("V11Actor_userId")
+  v11Profile_userId V11Profile? @relation("V11Profile_userId")
+  v11BundleConsent_userId V11BundleConsent[] @relation("V11BundleConsent_userId")
+  v11Registration_userId V11Registration[] @relation("V11Registration_userId")
+  v11Request_userId V11Request[] @relation("V11Request_userId")
+  v11PrivacyDisposition_userId V11PrivacyDisposition[] @relation("V11PrivacyDisposition_userId")
+}
+
+model UserProfile {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  preferredAreas      String[]
+  availableTimes      String[]
+  tastePreferences    String[]
+  dietaryRestrictions String[]
+  budgetRange         String
+  tableVibe           String
+  acceptableTableSizes Int[]   @default([4, 5, 6, 7, 8])
+  note                String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ConsentRecord {
+  id               String   @id @default(cuid())
+  userId           String
+  agreementVersion String
+  source           String
+  policyHash       String?
+  createdAt        DateTime @default(now())
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, agreementVersion])
+}
+
+model AgreementPolicy {
+  version     String   @id
+  text        String
+  textHash    String
+  source      String
+  active      Boolean  @default(false)
+  activatedAt DateTime
+  createdAt   DateTime @default(now())
+}
+
+model AdminUser {
+  id        String     @id @default(cuid())
+  username  String     @unique
+  role      AdminRole
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  audits    AuditLog[]
+}
+
+model Restaurant {
+  id           String           @id @default(cuid())
+  name         String
+  district     String
+  businessArea String
+  address      String
+  contactName  String
+  contactPhone String
+  budgetCents  Int
+  cuisineTags  String[]
+  capacity     Int
+  status       RestaurantStatus @default(ACTIVE)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  activities   Activity[]
+  v11Actor_restaurantId V11Actor[] @relation("V11Actor_restaurantId")
+  v11SupplyRevision_restaurantId V11SupplyRevision[] @relation("V11SupplyRevision_restaurantId")
+}
+
+model Activity {
+  id                String        @id @default(cuid())
+  restaurantId      String
+  title             String
+  theme             String
+  description       String
+  district          String
+  businessArea      String
+  startsAt          DateTime
+  endsAt            DateTime
+  registrationEndsAt DateTime
+  serviceFeeCents   Int
+  mealFeeIncluded   Boolean       @default(false)
+  mealFeePolicyText String
+  minSize           Int           @default(4)
+  targetSize        Int           @default(6)
+  maxSize           Int           @default(8)
+  capacity          Int
+  status            ActivityStatus @default(DRAFT)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  restaurant        Restaurant    @relation(fields: [restaurantId], references: [id])
+  orders            Order[]
+  notifications     Notification[]
+  tableGroups       TableGroup[]
+
+  @@index([status, startsAt])
+  v11SupplyRevision_activityId V11SupplyRevision[] @relation("V11SupplyRevision_activityId")
+  v11Registration_activityId V11Registration[] @relation("V11Registration_activityId")
+  v11Table_activityId V11Table[] @relation("V11Table_activityId")
+  v11CoreChange_activityId V11CoreChange[] @relation("V11CoreChange_activityId")
+}
+
+model Order {
+  id              String       @id @default(cuid())
+  userId          String
+  activityId      String
+  amountCents     Int
+  status          OrderStatus  @default(PENDING_PAYMENT)
+  agreementVersion String
+  consentRecordId String?
+  profileSnapshot Json?
+  inventoryLockedUntil DateTime?
+  registrationActive Boolean @default(true)
+  capacityHeld Boolean @default(true)
+  version         Int          @default(0)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  user            User         @relation(fields: [userId], references: [id])
+  activity        Activity     @relation(fields: [activityId], references: [id])
+  payments        Payment[]
+  refunds         Refund[]
+  review          Review?
+  reports         Report[]
+  tableMembers    TableMember[]
+  receipts        ChannelReceipt[]
+  refundObligations RefundObligation[]
+  notifications     Notification[]
+
+  // The persistent active-registration partial unique index is maintained by migration SQL.
+  @@index([userId, activityId])
+  @@index([consentRecordId])
+  @@index([status])
+}
+
+model Payment {
+  id             String        @id @default(cuid())
+  orderId        String
+  merchantOrderNo String        @unique @default(cuid())
+  amountCents    Int
+  status         PaymentStatus @default(PENDING)
+  channel        String        @default("mock")
+  active         Boolean       @default(true)
+  resolutionState String       @default("NEW")
+  version        Int           @default(0)
+  merchantScope  String        @default("legacy-unverified")
+  providerConfigId String      @default("legacy-unverified")
+  nextQueryAt    DateTime?
+  prepayId       String?       @unique
+  channelTradeNo String?       @unique
+  callbackNonce  String?       @unique
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  order          Order         @relation(fields: [orderId], references: [id])
+
+  receipts       ChannelReceipt[]
+  refunds        Refund[]
+
+  @@index([orderId, status])
+}
+
+model Refund {
+  id              String       @id @default(cuid())
+  orderId         String
+  merchantRefundNo String      @unique @default(cuid())
+  paymentId       String?
+  receiptId       String?
+  obligationId    String?       @unique
+  channel         String        @default("legacy-unverified")
+  merchantScope   String        @default("legacy-unverified")
+  providerConfigId String       @default("legacy-unverified")
+  resolutionState String        @default("NEW")
+  version         Int           @default(0)
+  amountCents     Int
+  status          RefundStatus @default(REVIEWING)
+  reason          String
+  requestedBy     String
+  channelRefundNo String?      @unique
+  callbackNonce   String?      @unique
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  order           Order        @relation(fields: [orderId], references: [id])
+
+  payment         Payment?      @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+  receipt         ChannelReceipt? @relation(fields: [receiptId], references: [id], onDelete: Restrict)
+  obligation      RefundObligation? @relation(fields: [obligationId], references: [id], onDelete: Restrict)
+
+  @@index([orderId, status])
+}
+
+model TableGroup {
+  id          String           @id @default(cuid())
+  activityId  String
+  status      TableGroupStatus @default(PENDING_CONFIRMATION)
+  generation  Int              @default(0)
+  ordinal     Int?
+  candidateDigest String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  activity    Activity         @relation(fields: [activityId], references: [id])
+  members     TableMember[]
+
+  @@unique([activityId, generation, ordinal])
+}
+
+model TableMember {
+  id           String     @id @default(cuid())
+  tableGroupId String
+  orderId      String
+  createdAt    DateTime   @default(now())
+  tableGroup   TableGroup @relation(fields: [tableGroupId], references: [id], onDelete: Cascade)
+  order        Order      @relation(fields: [orderId], references: [id])
+
+  @@unique([tableGroupId, orderId])
+}
+
+model Report {
+  id        String       @id @default(cuid())
+  userId    String
+  orderId   String
+  type      String
+  content   String
+  status    ReportStatus @default(OPEN)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  user      User         @relation(fields: [userId], references: [id])
+  order     Order        @relation(fields: [orderId], references: [id])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  orderId   String   @unique
+  score     Int
+  tags      String[]
+  content   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+  order     Order    @relation(fields: [orderId], references: [id])
+
+  @@index([userId, createdAt])
+}
+
+model Blacklist {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  reason    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id        String     @id @default(cuid())
+  actorId   String?
+  actorRole AdminRole?
+  action    String
+  targetType String
+  targetId  String
+  reason    String?
+  metadata  Json?
+  createdAt DateTime   @default(now())
+  actor     AdminUser? @relation(fields: [actorId], references: [id])
+
+  @@index([targetType, targetId])
+}
+
+model Notification {
+  id        String             @id @default(cuid())
+  businessKey String?          @unique
+  userId    String
+  orderId   String?
+  activityId String?
+  type      String
+  status    NotificationStatus @default(PENDING)
+  payload   Json?
+  readAt    DateTime?
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order     Order?             @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  activity  Activity?          @relation(fields: [activityId], references: [id], onDelete: Restrict)
+
+  @@index([userId, status, createdAt, id])
+}
+
+model WorkerHeartbeat {
+  id          String   @id @default(cuid())
+  mode        String
+  instanceId  String
+  version     String
+  lastPolledAt DateTime @default(now())
+
+  @@unique([mode, instanceId])
+  @@index([mode, lastPolledAt])
+}
+
+
+model ChannelReceipt {
+  id               String   @id @default(cuid())
+  channel          String
+  merchantScope    String
+  channelTradeNo   String
+  merchantOrderNo  String
+  paymentId        String?
+  orderId          String?
+  amountCents      Int
+  currency         String   @default("CNY")
+  evidenceHash     String
+  verifiedAt       DateTime
+  paidAt           DateTime?
+  createdAt        DateTime @default(now())
+  payment          Payment? @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+  order            Order?   @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  refunds          Refund[]
+  obligations      RefundObligation[]
+
+  @@unique([channel, merchantScope, channelTradeNo])
+  @@index([merchantScope, merchantOrderNo])
+  v11ReceiptBinding_receiptId V11ReceiptBinding? @relation("V11ReceiptBinding_receiptId")
+  v11FundComponent_receiptId V11FundComponent[] @relation("V11FundComponent_receiptId")
+  v11RefundInstruction_receiptId V11RefundInstruction[] @relation("V11RefundInstruction_receiptId")
+}
+
+model RefundObligation {
+  id            String @id @default(cuid())
+  receiptId     String
+  orderId       String?
+  businessKey   String @unique
+  cause         String
+  amountCents   Int
+  state         String @default("OPEN")
+  owner         String
+  deadline      DateTime
+  policyVersion String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  receipt       ChannelReceipt @relation(fields: [receiptId], references: [id], onDelete: Restrict)
+  order         Order? @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  refund        Refund?
+}
+
+model ReceivedEvent {
+  id                     String @id @default(cuid())
+  source                 String
+  merchantScope          String
+  eventKey               String
+  payloadHash            String
+  normalizedPayload      Json
+  verificationMaterialId String
+  verifiedAt             DateTime
+  state                  String @default("RECEIVED")
+  createdAt              DateTime @default(now())
+
+  @@unique([source, merchantScope, eventKey])
+}
+
+model DurableJob {
+  id             String @id @default(cuid())
+  kind           String
+  businessKey    String @unique
+  payloadVersion Int @default(1)
+  refId          String
+  state          String @default("READY")
+  runAt          DateTime @default(now())
+  attempts       Int @default(0)
+  leaseOwner     String?
+  leaseUntil     DateTime?
+  generation     Int @default(0)
+  errorClass     String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([state, runAt])
+}
+
+model ReconciliationBatch {
+  id             String @id @default(cuid())
+  merchantScope  String
+  period         String
+  sourceHash     String
+  coverageState  String
+  decisionOrdinal BigInt @default(autoincrement())
+  createdAt      DateTime @default(now())
+
+  @@unique([merchantScope, period, sourceHash])
+  @@index([merchantScope, period, decisionOrdinal(sort: Desc)], map: "ReconciliationBatch_scope_period_decisionOrdinal_idx")
+}
+
+model FinancialCase {
+  id             String @id @default(cuid())
+  caseKey        String @unique
+  category       String
+  sourceRef      String
+  owner          String
+  deadline       DateTime
+  state          String @default("OPEN")
+  resolution     String?
+  reviewedBy     String?
+  reviewedAt     DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([state, deadline])
+}
+
+// Disposable mock channel facts survive API/worker restarts and never represent real funds.
+model MockChannelTransaction {
+  id              String @id @default(cuid())
+  kind            String
+  businessKey     String @unique
+  channelNo       String @unique
+  originalTradeNo String?
+  amountCents     Int
+  status          String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// V1.1 isolated simulation domain. Frozen policy inputs and legacy funds remain intact.
+
+model V11Actor {
+  id String @id @default(cuid())
+  personId String
+  role String
+  userId String?
+  user User? @relation("V11Actor_userId", fields: [userId], references: [id], onDelete: Restrict)
+  restaurantId String?
+  restaurant Restaurant? @relation("V11Actor_restaurantId", fields: [restaurantId], references: [id], onDelete: Restrict)
+  passwordHash String
+  enabled Boolean @default(true)
+  version Int @default(0)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  @@index([personId])
+  v11Request_ownerActorId V11Request[] @relation("V11Request_ownerActorId")
+  v11Decision_actorId V11Decision[] @relation("V11Decision_actorId")
+  v11Attendance_restaurantActorId V11Attendance[] @relation("V11Attendance_restaurantActorId")
+  v11PolicyMaterialArchive_submittedBy V11PolicyMaterialArchive[] @relation("V11PolicyMaterialArchive_submittedBy")
+}
+
+model V11PolicySnapshot {
+  id String @id @default(cuid())
+  bundleVersion String
+  bundleDigest String @unique
+  baselineHash String
+  status String @default("LOCAL_DRAFT")
+  docsJson Json
+  blockersJson Json
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  v11BundleConsent_policyId V11BundleConsent[] @relation("V11BundleConsent_policyId")
+  v11SupplyRevision_policyId V11SupplyRevision[] @relation("V11SupplyRevision_policyId")
+  v11Registration_policyId V11Registration[] @relation("V11Registration_policyId")
+  runtimeBinding V11RuntimePolicyBinding?
+}
+
+// Immutable release material archive; never a runtime policy activation record.
+model V11PolicyMaterialArchive {
+  id String @id @default(cuid())
+  materialSha256 String @unique
+  bundleId String
+  version String
+  releaseVersion String
+  inheritedBaselineHash String
+  rawMaterial String
+  scope String @default("MATERIAL_ONLY")
+  submittedBy String
+  actor V11Actor @relation("V11PolicyMaterialArchive_submittedBy", fields: [submittedBy], references: [id], onDelete: Restrict)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  @@unique([bundleId, version, releaseVersion])
+  runtimeBindings V11RuntimePolicyBinding[]
+}
+
+// Separate provenance for an explicitly authorized runtime policy. Archives and
+// test policies remain unchanged; production/test environment is immutable.
+model V11RuntimePolicyBinding {
+  id String @id @default(cuid())
+  policyId String @unique
+  policy V11PolicySnapshot @relation(fields: [policyId], references: [id], onDelete: Restrict)
+  archiveId String
+  archive V11PolicyMaterialArchive @relation(fields: [archiveId], references: [id], onDelete: Restrict)
+  environment String
+  releaseVersion String
+  parameterRaw String
+  parameterDigest String
+  authorityRaw String
+  authoritySignature String
+  authorityDigest String
+  issuerId String
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+}
+
+model V11Profile {
+  id String @id @default(cuid())
+  userId String @unique
+  user User @relation("V11Profile_userId", fields: [userId], references: [id], onDelete: Restrict)
+  gender String?
+  adultConfirmed Boolean @default(false)
+  availableTimes String[] @default([])
+  adaptationConfirmed Boolean @default(false)
+  version Int @default(0)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+model V11BundleConsent {
+  id String @id @default(cuid())
+  userId String
+  user User @relation("V11BundleConsent_userId", fields: [userId], references: [id], onDelete: Restrict)
+  policyId String
+  policy V11PolicySnapshot @relation("V11BundleConsent_policyId", fields: [policyId], references: [id], onDelete: Restrict)
+  documentHashesJson Json
+  publicHashesJson Json
+  acceptedAt DateTime @db.Timestamptz(3)
+  source String @default("SIMULATION_ONLY")
+  @@index([userId, policyId])
+  v11Registration_consentId V11Registration[] @relation("V11Registration_consentId")
+}
+
+model V11SupplyRevision {
+  id String @id @default(cuid())
+  activityId String
+  activity Activity @relation("V11SupplyRevision_activityId", fields: [activityId], references: [id], onDelete: Restrict)
+  restaurantId String
+  restaurant Restaurant @relation("V11SupplyRevision_restaurantId", fields: [restaurantId], references: [id], onDelete: Restrict)
+  policyId String
+  policy V11PolicySnapshot @relation("V11SupplyRevision_policyId", fields: [policyId], references: [id], onDelete: Restrict)
+  revision Int
+  personId String?
+  minSize Int
+  targetSize Int
+  maxSize Int
+  maxTables Int
+  capacity Int
+  serviceFeeCents Int
+  depositCents Int
+  waitlistMax Int?
+  strategy String
+  snapshot Json
+  digest String
+  status String @default("DRAFT")
+  signedAt DateTime? @db.Timestamptz(3)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  @@unique([activityId, revision])
+  v11Registration_supplyId V11Registration[] @relation("V11Registration_supplyId")
+  v11Table_supplyId V11Table[] @relation("V11Table_supplyId")
+  v11CoreChange_supplyId V11CoreChange[] @relation("V11CoreChange_supplyId")
+}
+
+model V11Registration {
+  id String @id @default(cuid())
+  userId String
+  user User @relation("V11Registration_userId", fields: [userId], references: [id], onDelete: Restrict)
+  activityId String
+  activity Activity @relation("V11Registration_activityId", fields: [activityId], references: [id], onDelete: Restrict)
+  policyId String
+  policy V11PolicySnapshot @relation("V11Registration_policyId", fields: [policyId], references: [id], onDelete: Restrict)
+  supplyId String
+  supply V11SupplyRevision @relation("V11Registration_supplyId", fields: [supplyId], references: [id], onDelete: Restrict)
+  consentId String
+  consent V11BundleConsent @relation("V11Registration_consentId", fields: [consentId], references: [id], onDelete: Restrict)
+  category String
+  eligibilityState String @default("PENDING_PAYMENT")
+  serviceFeeCents Int
+  depositCents Int
+  snapshot Json
+  acceptedAt DateTime @db.Timestamptz(3)
+  paidEffectiveAt DateTime? @db.Timestamptz(3)
+  cancelAcceptedAt DateTime? @db.Timestamptz(3)
+  queueOrdinal BigInt?
+  active Boolean @default(true)
+  version Int @default(0)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  @@index([activityId, eligibilityState])
+  @@index([userId, createdAt, id])
+  v11SeatHold_registrationId V11SeatHold? @relation("V11SeatHold_registrationId")
+  v11Membership_registrationId V11Membership? @relation("V11Membership_registrationId")
+  v11PaymentIntent_registrationId V11PaymentIntent[] @relation("V11PaymentIntent_registrationId")
+  v11ReceiptBinding_registrationId V11ReceiptBinding[] @relation("V11ReceiptBinding_registrationId")
+  v11RefundInstruction_registrationId V11RefundInstruction[] @relation("V11RefundInstruction_registrationId")
+  v11Request_registrationId V11Request[] @relation("V11Request_registrationId")
+  v11DeliveryProof_registrationId V11DeliveryProof[] @relation("V11DeliveryProof_registrationId")
+  v11Attendance_registrationId V11Attendance? @relation("V11Attendance_registrationId")
+  v11ChangeChoice_registrationId V11ChangeChoice[] @relation("V11ChangeChoice_registrationId")
+  v11SettlementObligation_registrationId V11SettlementObligation[] @relation("V11SettlementObligation_registrationId")
+}
+
+model V11SeatHold {
+  id String @id @default(cuid())
+  registrationId String @unique
+  registration V11Registration @relation("V11SeatHold_registrationId", fields: [registrationId], references: [id], onDelete: Restrict)
+  expiresAt DateTime @db.Timestamptz(3)
+  releasedAt DateTime? @db.Timestamptz(3)
+  state String @default("HELD")
+  version Int @default(0)
+}
+
+model V11Table {
+  id String @id @default(cuid())
+  activityId String
+  activity Activity @relation("V11Table_activityId", fields: [activityId], references: [id], onDelete: Restrict)
+  supplyId String
+  supply V11SupplyRevision @relation("V11Table_supplyId", fields: [supplyId], references: [id], onDelete: Restrict)
+  ordinal Int
+  state String @default("UNFORMED")
+  everFormed Boolean @default(false)
+  t24FormedAt DateTime? @db.Timestamptz(3)
+  failedAt DateTime? @db.Timestamptz(3)
+  version Int @default(0)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  @@unique([activityId, ordinal])
+  v11Membership_tableId V11Membership[] @relation("V11Membership_tableId")
+  v11TableEvent_tableId V11TableEvent[] @relation("V11TableEvent_tableId")
+}
+
+model V11Membership {
+  id String @id @default(cuid())
+  registrationId String @unique
+  registration V11Registration @relation("V11Membership_registrationId", fields: [registrationId], references: [id], onDelete: Restrict)
+  tableId String
+  table V11Table @relation("V11Membership_tableId", fields: [tableId], references: [id], onDelete: Restrict)
+  active Boolean @default(true)
+  joinedAt DateTime @db.Timestamptz(3)
+  leftAt DateTime? @db.Timestamptz(3)
+}
+
+model V11TableEvent {
+  id String @id @default(cuid())
+  tableId String
+  table V11Table @relation("V11TableEvent_tableId", fields: [tableId], references: [id], onDelete: Restrict)
+  businessKey String @unique
+  kind String
+  acceptedAt DateTime @db.Timestamptz(3)
+  snapshot Json
+  version Int
+}
+
+model V11PaymentIntent {
+  id String @id @default(cuid())
+  registrationId String
+  registration V11Registration @relation("V11PaymentIntent_registrationId", fields: [registrationId], references: [id], onDelete: Restrict)
+  merchantOrderNo String @unique
+  active Boolean @default(true)
+  channel String @default("mock")
+  merchantScope String @default("mock-local")
+  providerConfigId String @default("mock-v1")
+  totalCents Int
+  prepayId String?
+  preparationState String @default("NOT_STARTED")
+  preparationVersion Int @default(0)
+  state String @default("NEW")
+  version Int @default(0)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+  v11ReceiptBinding_intentId V11ReceiptBinding[] @relation("V11ReceiptBinding_intentId")
+}
+
+model V11ReceiptBinding {
+  id String @id @default(cuid())
+  receiptId String @unique
+  receipt ChannelReceipt @relation("V11ReceiptBinding_receiptId", fields: [receiptId], references: [id], onDelete: Restrict)
+  intentId String?
+  intent V11PaymentIntent? @relation("V11ReceiptBinding_intentId", fields: [intentId], references: [id], onDelete: Restrict)
+  registrationId String?
+  registration V11Registration? @relation("V11ReceiptBinding_registrationId", fields: [registrationId], references: [id], onDelete: Restrict)
+  classification String
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+}
+
+model V11FundComponent {
+  id String @id @default(cuid())
+  receiptId String
+  receipt ChannelReceipt @relation("V11FundComponent_receiptId", fields: [receiptId], references: [id], onDelete: Restrict)
+  kind String
+  originalCents Int
+  version Int @default(0)
+  @@unique([receiptId, kind])
+  v11Disposition_componentId V11Disposition[] @relation("V11Disposition_componentId")
+  v11SettlementObligation_componentId V11SettlementObligation[] @relation("V11SettlementObligation_componentId")
+}
+
+model V11Disposition {
+  id String @id @default(cuid())
+  componentId String
+  component V11FundComponent @relation("V11Disposition_componentId", fields: [componentId], references: [id], onDelete: Restrict)
+  businessKey String @unique
+  kind String
+  amountCents Int
+  state String
+  sourceRef String
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+  @@index([componentId, state])
+}
+
+model V11RefundInstruction {
+  id String @id @default(cuid())
+  registrationId String?
+  registration V11Registration? @relation("V11RefundInstruction_registrationId", fields: [registrationId], references: [id], onDelete: Restrict)
+  receiptId String
+  receipt ChannelReceipt @relation("V11RefundInstruction_receiptId", fields: [receiptId], references: [id], onDelete: Restrict)
+  businessKey String @unique
+  merchantRefundNo String @unique
+  serviceFeeCents Int
+  depositCents Int
+  totalCents Int
+  requestedServiceFeeCents Int?
+  requestedDepositCents Int?
+  channel String @default("mock")
+  merchantScope String @default("mock-local")
+  providerConfigId String @default("mock-v1")
+  originalTradeNo String
+  state String @default("NEW")
+  channelRefundNo String? @unique
+  version Int @default(0)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+model V11Request {
+  id String @id @default(cuid())
+  businessKey String @unique
+  registrationId String?
+  registration V11Registration? @relation("V11Request_registrationId", fields: [registrationId], references: [id], onDelete: Restrict)
+  userId String?
+  user User? @relation("V11Request_userId", fields: [userId], references: [id], onDelete: Restrict)
+  kind String
+  acceptedAt DateTime @db.Timestamptz(3)
+  source String
+  state String @default("ACCEPTED")
+  blockerIds Json
+  payload Json
+  ownerActorId String?
+  ownerActor V11Actor? @relation("V11Request_ownerActorId", fields: [ownerActorId], references: [id], onDelete: Restrict)
+  version Int @default(0)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  @@index([state, kind])
+  v11Decision_requestId V11Decision[] @relation("V11Decision_requestId")
+  v11DeliveryProof_requestId V11DeliveryProof[] @relation("V11DeliveryProof_requestId")
+  v11PrivacyDisposition_requestId V11PrivacyDisposition[] @relation("V11PrivacyDisposition_requestId")
+}
+
+model V11Decision {
+  id String @id @default(cuid())
+  requestId String
+  request V11Request @relation("V11Decision_requestId", fields: [requestId], references: [id], onDelete: Restrict)
+  actorId String
+  actor V11Actor @relation("V11Decision_actorId", fields: [actorId], references: [id], onDelete: Restrict)
+  personId String
+  kind String
+  payload Json
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+}
+
+model V11DeliveryProof {
+  id String @id @default(cuid())
+  requestId String?
+  request V11Request? @relation("V11DeliveryProof_requestId", fields: [requestId], references: [id], onDelete: Restrict)
+  registrationId String?
+  registration V11Registration? @relation("V11DeliveryProof_registrationId", fields: [registrationId], references: [id], onDelete: Restrict)
+  noticeKey String @unique
+  kind String
+  state String
+  receivedAt DateTime? @db.Timestamptz(3)
+  proofType String @default("SIMULATED")
+  personId String?
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+}
+
+model V11Attendance {
+  id String @id @default(cuid())
+  registrationId String @unique
+  registration V11Registration @relation("V11Attendance_registrationId", fields: [registrationId], references: [id], onDelete: Restrict)
+  checkinAt DateTime? @db.Timestamptz(3)
+  qrDigest String?
+  restaurantActorId String?
+  restaurantActor V11Actor? @relation("V11Attendance_restaurantActorId", fields: [restaurantActorId], references: [id], onDelete: Restrict)
+  restaurantResult String?
+  confirmedAt DateTime? @db.Timestamptz(3)
+  version Int @default(0)
+}
+
+model V11CoreChange {
+  id String @id @default(cuid())
+  activityId String
+  activity Activity @relation("V11CoreChange_activityId", fields: [activityId], references: [id], onDelete: Restrict)
+  supplyId String
+  supply V11SupplyRevision @relation("V11CoreChange_supplyId", fields: [supplyId], references: [id], onDelete: Restrict)
+  businessKey String @unique
+  kind String
+  originalSnapshot Json
+  proposedSnapshot Json
+  state String @default("PROPOSED")
+  extraCompensationCents Int?
+  acceptedAt DateTime @db.Timestamptz(3)
+  version Int @default(0)
+  v11ChangeChoice_changeId V11ChangeChoice[] @relation("V11ChangeChoice_changeId")
+}
+
+model V11ChangeChoice {
+  id String @id @default(cuid())
+  changeId String
+  change V11CoreChange @relation("V11ChangeChoice_changeId", fields: [changeId], references: [id], onDelete: Restrict)
+  registrationId String
+  registration V11Registration @relation("V11ChangeChoice_registrationId", fields: [registrationId], references: [id], onDelete: Restrict)
+  choice String
+  acceptedAt DateTime @db.Timestamptz(3)
+  @@unique([changeId, registrationId])
+}
+
+model V11SettlementObligation {
+  id String @id @default(cuid())
+  registrationId String
+  registration V11Registration @relation("V11SettlementObligation_registrationId", fields: [registrationId], references: [id], onDelete: Restrict)
+  componentId String
+  component V11FundComponent @relation("V11SettlementObligation_componentId", fields: [componentId], references: [id], onDelete: Restrict)
+  businessKey String @unique
+  amountCents Int
+  state String @default("BLOCKED_POLICY")
+  mockAccountRef String?
+  channelNo String?
+  sourceRef String
+  version Int @default(0)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+}
+
+model V11PrivacyDisposition {
+  id String @id @default(cuid())
+  requestId String
+  request V11Request @relation("V11PrivacyDisposition_requestId", fields: [requestId], references: [id], onDelete: Restrict)
+  userId String
+  user User @relation("V11PrivacyDisposition_userId", fields: [userId], references: [id], onDelete: Restrict)
+  businessKey String @unique
+  fields String[]
+  state String
+  appliedAt DateTime? @db.Timestamptz(3)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+}
+
+// Internal comparison evidence only; never financial or release authority.
+model V11BillComparisonSnapshot {
+  id String @id @db.Uuid
+  identityHash String
+  merchantScope String
+  providerConfigId String
+  billDate String
+  sourceSha256 String
+  owner String
+  releaseVersion String
+  totalRows Int
+  outsideRows Int
+  snapshot Json
+  snapshotHash String
+  capturedAt DateTime @default(now()) @db.Timestamptz(3)
+  pages V11BillComparisonPage[]
+}
+
+model V11BillComparisonPage {
+ snapshotId String @db.Uuid
+ snapshot V11BillComparisonSnapshot @relation(fields:[snapshotId],references:[id],onDelete:Restrict,onUpdate:NoAction)
+ phase String
+ start Int
+ end Int
+ snapshotHash String
+ result Json
+ caseIds String[]
+ paymentQueryRefs String[] @default([])
+ refundQueryRefs String[] @default([])
+ contentHash String
+ committedAt DateTime @default(now()) @db.Timestamptz(3)
+ @@id([snapshotId,phase,start])
+}

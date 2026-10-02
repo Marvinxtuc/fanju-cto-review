@@ -1,0 +1,11 @@
+import {formalBusinessTestFixture} from '../prelaunch/formal-business-test-fixture.mjs';
+import {syntheticCheckinConfiguration} from '../prelaunch/formal-checkin-test-config.mjs';
+import {verifyOwnedEnvironment,TASK_ID} from '../../scripts/prelaunch-owned-env.mjs';
+import {dirname} from 'node:path';
+const {runtime}=await verifyOwnedEnvironment(dirname(process.env.PRELAUNCH_ENV_FILE??''));
+const x=await formalBusinessTestFixture({}, {checkinActions:true,checkinEnv:syntheticCheckinConfiguration()}),u=await x.user();await x.succeed(u);
+const supply=await x.db.v11SupplyRevision.findFirstOrThrow({where:{activityId:x.activity.id,status:'FORMAL_APPROVED'}});
+await x.app.listen({host:'127.0.0.1',port:0});
+process.send?.({type:'PRELAUNCH_READY',task_id:TASK_ID,owner_id:runtime.owner_id,pid:process.pid,port:x.app.server.address().port,activityId:x.activity.id,supplyId:supply.id,registrationId:u.registration.id,userAuthorization:u.headers.authorization,password:x.password,restaurantUsername:x.rest.id});
+process.on('message',async m=>{if(m?.type==='COUNTS'){const a=await x.db.v11Attendance.findUnique({where:{registrationId:u.registration.id}});process.send?.({type:'COUNTS',attendanceFacts:await x.db.auditLog.count({where:{action:'checkin.v11-formal-recorded',targetId:a?.id??'none'}}),checkinAt:a?.checkinAt??null,restaurantResult:a?.restaurantResult??null,confirmedAt:a?.confirmedAt??null,refundInstructions:await x.db.v11RefundInstruction.count({where:{registrationId:u.registration.id}}),mandatoryRefunds:await x.db.v11Request.count({where:{registrationId:u.registration.id,kind:'FORMAL_MANDATORY_REFUND'}})});}});
+for(const signal of ['SIGTERM','SIGINT'])process.once(signal,async()=>{await x.close();process.exit(0);});

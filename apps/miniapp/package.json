@@ -1,0 +1,34 @@
+{
+  "name": "@timeleft-shanghai/miniapp",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "taro build --type weapp --watch",
+    "build": "NODE_ENV=production taro build --type weapp",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@tarojs/components": "4.2.0",
+    "@tarojs/helper": "4.2.0",
+    "@tarojs/react": "4.2.0",
+    "@tarojs/runtime": "4.2.0",
+    "@tarojs/shared": "4.2.0",
+    "@tarojs/taro": "4.2.0",
+    "react": "18.3.1",
+    "@timeleft-shanghai/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@babel/core": "7.29.7",
+    "@babel/preset-react": "7.28.5",
+    "@tarojs/cli": "4.2.0",
+    "@tarojs/plugin-framework-react": "4.2.0",
+    "@tarojs/plugin-platform-weapp": "4.2.0",
+    "@tarojs/webpack5-runner": "4.2.0",
+    "@types/react": "18.3.31",
+    "babel-preset-taro": "4.2.0",
+    "less": "4.6.7",
+    "vite": "4.5.14"
+  }
+}

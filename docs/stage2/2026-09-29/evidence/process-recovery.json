@@ -1,0 +1,9 @@
+{
+  "ack": 200,
+  "apiKilledAfterAck": true,
+  "receiptBeforeWorker": 0,
+  "receiptAfterWorker": 1,
+  "manualCase": 1,
+  "workerExit": 0,
+  "realNetwork": false
+}

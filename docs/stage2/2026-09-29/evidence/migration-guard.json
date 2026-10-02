@@ -1,0 +1,7 @@
+{
+  "duplicateLegacyBlocked": true,
+  "invalidAmountBlocked": true,
+  "recordsPreserved": true,
+  "partialDDLAbsent": true,
+  "fixture": "disposable schema"
+}

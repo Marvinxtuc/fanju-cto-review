@@ -1,0 +1,22 @@
+[
+  {
+    "path": "apps/miniapp/src/api.ts",
+    "sha256": "34e76b0989da5761fc085fad8a029a8117dce84ea129871ac1c1ef24137b9517"
+  },
+  {
+    "path": "apps/miniapp/src/api.test.ts",
+    "sha256": "94ac23bea5ba0c75e80a43228841d9a25ebeb07e5bc03e9d798f341b202dc8a1"
+  },
+  {
+    "path": "apps/miniapp/config/index.ts",
+    "sha256": "7d6c37fdb14a31e3b5b0cc670a322232b719015e727521b75e4cb85635ce7772"
+  },
+  {
+    "path": "artifacts/release-manifest.json",
+    "sha256": "44cb2c2c9886ef8b49730751da1309997ec5f5eb8da94308c5a0ee7ad5a502d3"
+  },
+  {
+    "path": "services/api/src/app.test.ts",
+    "sha256": "11d114c73588dc8879462bc234163fb7dc3366f649ddce54c78734a8ebd72ed2"
+  }
+]

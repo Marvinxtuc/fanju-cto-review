@@ -1,0 +1,41 @@
+{
+  "capturedAt": "2026-09-30T02:46:24.938Z",
+  "environment": "disposable local mock database",
+  "orderId": "cmungyol400280tnvut7zq6f9",
+  "userId": "cmungqite00000tnvwdsnqat6",
+  "report": [
+    {
+      "id": "cmuni5umx001e3bnvw0k98uza",
+      "type": "现场异常",
+      "content": "本地模拟器反馈验收：请核实菜单说明。",
+      "status": "OPEN"
+    }
+  ],
+  "review": [
+    {
+      "id": "cmuni60vg001f3bnv47v286wf",
+      "score": 4,
+      "tags": [
+        "菜品",
+        "菜单"
+      ],
+      "content": "本地模拟器评价验收：菜单说明清楚。"
+    }
+  ],
+  "profile": {
+    "note": "仅用于本地验证本地模拟器问卷保存验收，不含真实个人资料。",
+    "updatedAt": "2026-09-29T18:45:57.222Z"
+  },
+  "orderStatus": "COMPLETED",
+  "assertions": {
+    "singleReport": true,
+    "singleReviewAfterUpdate": true,
+    "reviewUpdatedToFour": true,
+    "profileSaved": true
+  },
+  "fixtureBoundary": "Three mock peers, formation, start and completion prepared through API fixture; feedback, review submission/update and preference save performed in WeChat simulator UI.",
+  "screenshots": [
+    "/tmp/fanju-miniapp-feedback-review-20260930.png",
+    "/tmp/fanju-miniapp-profile-20260930.png"
+  ]
+}
